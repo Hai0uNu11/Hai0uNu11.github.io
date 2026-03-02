@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"hai0unu11.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-tomorrow"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="专注于 Java 代码审计、红蓝对抗与漏洞挖掘">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hai0uBlog">
+<meta property="og:url" content="https://hai0unu11.github.io/index.html">
+<meta property="og:site_name" content="Hai0uBlog">
+<meta property="og:description" content="专注于 Java 代码审计、红蓝对抗与漏洞挖掘">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="Hai0u">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://hai0unu11.github.io/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":true,"isPost":false,"lang":"zh-CN","comments":"","permalink":"","path":"index.html","title":""}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Hai0uBlog</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Hai0uBlog</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">好好学习，天天向上！</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Hai0u"
+      src="/images/unnamed.jpg">
+  <p class="site-author-name" itemprop="name">Hai0u</p>
+  <div class="site-description" itemprop="description">专注于 Java 代码审计、红蓝对抗与漏洞挖掘</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">1</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://hai0unu11.github.io/2026/03/01/%E4%BC%81%E4%B8%9A%E7%BA%A7%E5%86%85%E9%83%A8%E9%92%93%E9%B1%BC%E6%BC%94%E7%BB%83%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97%EF%BC%9AGoPhish-EwoMail-%E5%AE%9E%E6%88%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/unnamed.jpg">
+      <meta itemprop="name" content="Hai0u">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hai0uBlog">
+      <meta itemprop="description" content="专注于 Java 代码审计、红蓝对抗与漏洞挖掘">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Hai0uBlog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/03/01/%E4%BC%81%E4%B8%9A%E7%BA%A7%E5%86%85%E9%83%A8%E9%92%93%E9%B1%BC%E6%BC%94%E7%BB%83%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97%EF%BC%9AGoPhish-EwoMail-%E5%AE%9E%E6%88%98/" class="post-title-link" itemprop="url">企业级内部钓鱼演练环境搭建指南：GoPhish + EwoMail 实战</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-03-01 19:51:42" itemprop="dateCreated datePublished" datetime="2026-03-01T19:51:42+08:00">2026-03-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-03-02 12:19:40" itemprop="dateModified" datetime="2026-03-02T12:19:40+08:00">2026-03-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/sec-service/" itemprop="url" rel="index"><span itemprop="name">安全服务</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>一、背景</p>
+<p> **免责声明：**<strong>本文章所有内容仅限网络安全技术交流，严禁用于任何非法入侵或破坏行为。读者须遵守国家法律法规，在授权范围内进行学习与测试，因滥用技术造成的后果由使用者自行承担。技术有边界，安全需共护。</strong></p>
+<p> 今年又到钓鱼演练的时间，写这篇文章主要是想记录一下。</p>
+<h1 id="二、EwoMail-GoPhish搭建"><a href="#二、EwoMail-GoPhish搭建" class="headerlink" title="二、EwoMail+GoPhish搭建"></a>二、EwoMail+GoPhish搭建</h1><h2 id="2-1-EwoMail搭建"><a href="#2-1-EwoMail搭建" class="headerlink" title="2.1.EwoMail搭建"></a>2.1.EwoMail搭建</h2><h3 id="2-1-1服务器的购买"><a href="#2-1-1服务器的购买" class="headerlink" title="2.1.1服务器的购买"></a>2.1.1服务器的购买</h3><p>**注意：**国内X云服务器要解封25，建议买推荐的测试使用，请勿用于非法用途！</p>
+<p>本次在野草云香港vps上购买的vps，配置是2c2g，域名我是在阿里云上购买：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://my.yecaoyun.com/</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/image-20260228165322723-1772365943422-1.png" alt="image-20260228165322723"></p>
+<h3 id="2-1-2EwoMail部署"><a href="#2-1-2EwoMail部署" class="headerlink" title="2.1.2EwoMail部署"></a>2.1.2EwoMail部署</h3><h4 id="2-1-2-1-连通测试"><a href="#2-1-2-1-连通测试" class="headerlink" title="2.1.2.1. 连通测试"></a>2.1.2.1. 连通测试</h4><p>出现220字样才是正常的。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install telnet -y</span><br><span class="line">telnet smtp.qq.com 25 </span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/image-20260228170916255-1772365943422-3.png" alt="image-20260228170916255"></p>
+<h4 id="2-1-2-2-修改主机"><a href="#2-1-2-2-修改主机" class="headerlink" title="2.1.2.2. 修改主机"></a>2.1.2.2. 修改主机</h4><p><strong>关闭防护：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">邮件系统涉及大量底层目录权限交互，关闭 SELinux 可避免各种玄学的权限拦截报错。</span><br><span class="line"></span><br><span class="line">vi /etc/sysconfig/selinux</span><br><span class="line">SELINUX=enforcing 改为 SELINUX=disabled</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/image-20260228171051221-1772365943422-2.png" alt="image-20260228171051221"></p>
+<p><strong>修改主机名：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hostnamectl set-hostname mail.xxxx.cc(你的域名)</span><br></pre></td></tr></table></figure>
+
+<p><strong>修改本地解析</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/hosts</span><br><span class="line">127.0.0.1 mail.xxxx.cc stmp.xxxx.cc imap.xxxx.cc.xxxx.cc</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/image-20260228171742110-1772365943422-4.png" alt="image-20260228171742110"></p>
+<p><strong>创建swap分区（内存超过2G，可不配置）EwoMail 包含众多反垃圾组件，对内存消耗极大，在 2C2G 的机器上极其容易 OOM（内存溢出）导致数据库崩溃，因此必须分配虚拟内存。</strong></p>
+<p>创建1G的swap，可以根据你的服务器配置来调整大小</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd if=/dev/zero of=/mnt/swap bs=1M count=1024  </span><br></pre></td></tr></table></figure>
+
+<p>设置交换分区文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkswap /mnt/swap</span><br></pre></td></tr></table></figure>
+
+<p>启动swap</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">swapon /mnt/swap</span><br></pre></td></tr></table></figure>
+
+<p>设置开机时自启用 swap 分区</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">需要修改文件 /etc/fstab 中的 swap 行，添加</span><br><span class="line">/mnt/swap swap swap defaults 0 0</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/image-20260228171447764-1772365943422-5.png" alt="image-20260228171447764"></p>
+<h4 id="2-1-2-3-安装EW系统"><a href="#2-1-2-3-安装EW系统" class="headerlink" title="2.1.2.3. 安装EW系统"></a>2.1.2.3. 安装EW系统</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum -y install git</span><br><span class="line">cd /root</span><br><span class="line">git clone https://gitee.com/laowu5/EwoMail.git</span><br><span class="line">cd /root/EwoMail/install</span><br><span class="line">sh ./start.sh xxxx.cc(你的域名)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/image-20260228171717440-1772365943422-6.png" alt="image-20260228171717440"></p>
+<h4 id="2-1-2-4-配置域名解析"><a href="#2-1-2-4-配置域名解析" class="headerlink" title="2.1.2.4.配置域名解析"></a>2.1.2.4.配置域名解析</h4><p><strong>参考：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://doc.ewomail.com/docs/ewomail/main_domain</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/image-20260228172102644-1772365943422-9.png" alt="image-20260228172102644"></p>
+<p><strong>获取dkim key（配置 DKIM 是为了让收件方网关验证邮件确实由该域名授权发出，是提升邮件到达率、防拒收的核心要素。）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">amavisd -c /etc/amavisd/amavisd.conf showkeys</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/image-20260228172213890-1772365943422-7.png" alt="image-20260228172213890"></p>
+<p>复制输出的信息，打开<a target="_blank" rel="noopener" href="http://www.ewomail.com/list-20.html">http://www.ewomail.com/list-20.html</a>  整理dkim信息</p>
+<p><img src="/images/image-20260228172256145-1772365943422-8.png" alt="image-20260228172256145"></p>
+<h4 id="2-1-2-5-登录后台添加邮箱用户"><a href="#2-1-2-5-登录后台添加邮箱用户" class="headerlink" title="2.1.2.5.登录后台添加邮箱用户"></a>2.1.2.5.登录后台添加邮箱用户</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">8000端口：即WebMail页面</span><br><span class="line">8010端口：即邮件管理后台</span><br><span class="line">http://xx.xx.xx.xx:8010/</span><br><span class="line">默认账号：admin</span><br><span class="line">默认密码：ewomail123</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/image-20260228172559592-1772365943422-10.png" alt="image-20260228172559592"></p>
+<h4 id="2-1-2-6-登录WebMail测试发信"><a href="#2-1-2-6-登录WebMail测试发信" class="headerlink" title="2.1.2.6.登录WebMail测试发信"></a>2.1.2.6.登录WebMail测试发信</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://xx.xx.xx.xx:8080/   成功后，下一步配置gophish平台</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/image-20260228174410219-1772365943422-11.png" alt="image-20260228174410219"></p>
+<h2 id="2-2GoPhish搭建"><a href="#2-2GoPhish搭建" class="headerlink" title="2.2GoPhish搭建"></a>2.2GoPhish搭建</h2><h3 id="2-2-1-GoPhish部署"><a href="#2-2-1-GoPhish部署" class="headerlink" title="2.2.1. GoPhish部署"></a>2.2.1. GoPhish部署</h3><p>我是在Windows部署的，直接cmd启动gophish.exe</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/gophish/gophish</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/image-20260228174644732-1772365943422-12.png" alt="image-20260228174644732"></p>
+<p><strong>修改配置文件</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">config.json文件，可以修改端口等信息</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/image-20260228174939880-1772365943422-13.png" alt="image-20260228174939880"></p>
+<p><strong>启动：</strong></p>
+<hr>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">运行完会生成一个随意密码 </span><br><span class="line">level=info msg=&quot;Please login with the username admin and the password 68eb5961e9f5eef4&quot;</span><br><span class="line">nohup ./gophish &gt; gophish.log 2&gt;&amp;1 &amp;       Linux可以后台启动</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/image-20260228175151103-1772365943422-14.png" alt="image-20260228175151103"></p>
+<h3 id="2-2-2-GoPhish基本使用"><a href="#2-2-2-GoPhish基本使用" class="headerlink" title="2.2.2. GoPhish基本使用"></a>2.2.2. GoPhish基本使用</h3><h4 id="2-2-2-1-基本功能说明"><a href="#2-2-2-1-基本功能说明" class="headerlink" title="2.2.2.1 基本功能说明"></a>2.2.2.1 基本功能说明</h4><p><img src="/images/image-20260228232810656-1772365943422-15.png" alt="image-20260228232810656"></p>
+<h4 id="2-2-2-1-邮件发送配置"><a href="#2-2-2-1-邮件发送配置" class="headerlink" title="2.2.2.1 邮件发送配置"></a>2.2.2.1 邮件发送配置</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Name 随意填写，为Profile的名称</span><br><span class="line">From 别名，为邮件的发送人，这里的格式为 名字&lt;邮件地址&gt;，名字可以任意填写，但邮箱地址必须和下面的Username一致。</span><br><span class="line">Host smtp服务地址，因为我们没有做域名解析，所以直接填写 IP地址:25/465 即可。</span><br><span class="line">Username和Password 为上面创建的邮箱用户。</span><br><span class="line">配置完</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/image-20260301001135114-1772365943422-16.png" alt="image-20260301001135114"></p>
+<h4 id="2-2-2-2-钓鱼用户组"><a href="#2-2-2-2-钓鱼用户组" class="headerlink" title="2.2.2.2 钓鱼用户组"></a>2.2.2.2 钓鱼用户组</h4><p><img src="/images/image-20260228233751170-1772365943422-17.png" alt="image-20260228233751170"></p>
+<h4 id="2-2-2-3-钓鱼邮件模板"><a href="#2-2-2-3-钓鱼邮件模板" class="headerlink" title="2.2.2.3 钓鱼邮件模板"></a>2.2.2.3 钓鱼邮件模板</h4><p><strong>2.2.2.3.1.邮件原文</strong></p>
+<p><img src="/images/image-20260228234456468-1772365943422-19.png" alt="image-20260228234456468"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这里的 Change Links to Point to Landing Page 意思是将邮件内的链接替换成显示钓鱼页面的地址。因为你还没设置，所以使用 &#123;&#123;.URL&#125;&#125; 暂填代替。</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/image-20260228234738124-1772365943422-18.png" alt="image-20260228234738124"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">导入后点击 Source 就可以看到邮件内的所有链接替换成了 &#123;&#123;.URL&#125;&#125;。</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/image-20260228234837004-1772365943423-20.png" alt="image-20260228234837004"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">**获取邮件原文**</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/image-20260228234239533-1772365943423-23.png" alt="image-20260228234239533"></p>
+<p><img src="/images/image-20260228234551447-1772365943423-21.png" alt="image-20260228234551447"></p>
+<p><img src="/images/image-20260228234614736-1772365943423-22.png" alt="image-20260228234614736"></p>
+<p><strong>2.2.2.3.1.html格式</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">AI生成就可以了</span><br><span class="line"></span><br><span class="line">二维码的也可以用AI生成，二维码如果微信扫描会有告警，可以使用以下命令加个证书：</span><br><span class="line">#安装certbot            </span><br><span class="line">sudo apt install certbot            </span><br><span class="line">#关闭gophish            </span><br><span class="line">sudo kill $(pidof gophish)             </span><br><span class="line">#生成证书，多域名可用逗号隔开            </span><br><span class="line">sudo certbot certonly -d access.a.com --standalone             </span><br><span class="line">#建立软连接，软连接地址根据工具生成的地址修改            </span><br><span class="line">ln -s /etc/letsencrypt/live/xxxx.com/privkey.pem xxxx.key         </span><br><span class="line">ln -s /etc/letsencrypt/live/xxxx.com/fullchain.pem xxxx.crt </span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/image-20260228235113079-1772365943423-24.png" alt="image-20260228235113079"></p>
+<p><strong>2.2.2.4 创建钓鱼网页</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">使用它本身自己导入的，可能会有点问题。</span><br><span class="line">可以自己保存网页下来，然后手工改改，本次我自己使用的是python flask框架简单写了一个。</span><br></pre></td></tr></table></figure>
+
+<h5 id=""><a href="#" class="headerlink" title=""></a><img src="/images/image-20260228235448569-1772365943423-25.png" alt="image-20260228235448569"></h5><p><img src="/images/image-20260301000217771-1772365943423-26.png" alt="image-20260301000217771"></p>
+<p><strong>2.2.2.5. 发送钓鱼邮件测试</strong></p>
+<p><img src="/images/image-20260301000950856-1772365943423-27.png" alt="image-20260301000950856"></p>
+<h2 id="2-3-钓鱼场景搭建"><a href="#2-3-钓鱼场景搭建" class="headerlink" title="2.3.钓鱼场景搭建"></a>2.3.钓鱼场景搭建</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">我自己使用 flask框架简单写了一个，将获取到的信息保存到Excel文件里面，然后在服务器里面启动就行</span><br></pre></td></tr></table></figure>
+
+<p><strong>后端</strong>：</p>
+<p><img src="/images/image-20260301000250346-1772365943423-31.png"></p>
+<p><strong>前端</strong>：</p>
+<p><img src="/images/image-20260301140557101-1772365943423-28.png" alt="image-20260301140557101"></p>
+<p><strong>捕获信息：</strong></p>
+<p><img src="/images/image-20260301141622577-1772365943423-30.png" alt="image-20260301141622577"></p>
+<h2 id="三、踩坑记录"><a href="#三、踩坑记录" class="headerlink" title="三、踩坑记录"></a>三、踩坑记录</h2><h2 id="踩坑1：Gophish测试邮件发送失败"><a href="#踩坑1：Gophish测试邮件发送失败" class="headerlink" title="踩坑1：Gophish测试邮件发送失败"></a>踩坑1：Gophish测试邮件发送失败</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">分析原因：云厂商为了防止垃圾邮件泛滥，底层防火墙会禁止出口方向的TCP25端口</span><br><span class="line">25 端口是传统的明文传输协议，所以可以使用465端口，465 端口是专门用于加密邮件传输的端口。</span><br></pre></td></tr></table></figure>
+
+<h2 id="踩坑2：部署完EwoMail-服务器远程不上"><a href="#踩坑2：部署完EwoMail-服务器远程不上" class="headerlink" title="踩坑2：部署完EwoMail 服务器远程不上"></a>踩坑2：部署完EwoMail 服务器远程不上</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">因为我的服务器ssh端口是随机的，EwoMail 的安装脚本突然启动 firewalld 时，如果没有把ssh的远程端口放到白名单，直接导致SSH远程端口远程不上。</span><br><span class="line">sudo systemctl stop firewalld</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/image-20260301140818069-1772365943423-29.png" alt="image-20260301140818069"></p>
+<h1 id="三、总结"><a href="#三、总结" class="headerlink" title="三、总结"></a>三、总结</h1><p>回顾整个过程，原生的Gophish虽然功能强大，但其在邮件头和Web层面存在较多默认指纹，例如默认的 <code>X-Mailer: gophish</code> 邮件头、<code>X-Gophish-Contact</code> 标识，以及钓鱼链接中标志性的 <code>?rid=</code> 参数，企业内一些邮件网关基本可以闭眼拦截，所以后续可以对Gophish进行源码层面的二次开发，剔除特征。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Hai0u</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
