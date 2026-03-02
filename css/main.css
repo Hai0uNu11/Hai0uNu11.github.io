@@ -1736,7 +1736,7 @@ pre code {
     vertical-align: middle;
   }
   .links-of-author a::before {
-    background: #ffff50;
+    background: #f53c29;
     display: inline-block;
     margin-right: 3px;
     transform: translateY(-2px);
@@ -3238,4 +3238,30 @@ header.header {
   .comments {
     padding: 10px 12px;
   }
+}
+body {
+  background: #0d1117;
+}
+.headband {
+  background: linear-gradient(90deg, #f33 0%, #1e90ff 100%);
+  height: 4px;
+}
+a:hover,
+span.exturl:hover {
+  color: #0f0;
+  text-shadow: 0 0 5px rgba(0,255,0,0.5);
+}
+.sidebar-inner,
+.post-block {
+  border: 1px solid #30363d;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+::selection {
+  background: #0f0;
+  color: #000;
+}
+.footer-inner .with-love,
+.footer-inner .powered-by,
+.footer-inner .theme-info {
+  display: none;
 }
