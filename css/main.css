@@ -1736,7 +1736,7 @@ pre code {
     vertical-align: middle;
   }
   .links-of-author a::before {
-    background: #ffd7ff;
+    background: #6edabd;
     display: inline-block;
     margin-right: 3px;
     transform: translateY(-2px);
@@ -3260,8 +3260,34 @@ span.exturl:hover {
   background: #0f0;
   color: #000;
 }
+.post-block {
+  margin-bottom: 20px;
+}
+.post-body {
+  font-size: 16px;
+  line-height: 1.62;
+}
+.post-body p {
+  margin: 0 0 14px;
+}
+.post-body li {
+  margin: 3px 0;
+}
+.post-body img {
+  border: 1px solid #30363d;
+  border-radius: 4px;
+}
+.post-body code {
+  word-break: break-word;
+}
 .footer-inner .with-love,
 .footer-inner .powered-by,
 .footer-inner .theme-info {
   display: none;
+}
+@media (max-width: 767px) {
+  .post-body {
+    font-size: 15px;
+    line-height: 1.58;
+  }
 }

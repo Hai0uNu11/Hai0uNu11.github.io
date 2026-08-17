@@ -20,12 +20,12 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"hai0unu11.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-tomorrow"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="JNDI 全称为 Java Naming and Directory Interface，即java名称与目录接口，也就是一个名字对应一个Java对象。 JNDI是一个 API 抽象层，它不负责具体实现，而是提供统一的接口来访问各种命名和目录服务。这些服务的具体实现由不同的 SPI（Service Provider Interface）完成，例如：  RMI（Remote Method Invoc">
+    <meta name="description" content="JNDI 全称为 Java Naming and Directory Interface，即 Java 命名与目录接口。它允许应用通过名称查找对象、对象引用、目录条目或其他资源，并不等同于“一个名字只能对应一个 Java 对象”。 JNDI是一个 API 抽象层，它不负责具体实现，而是提供统一的接口来访问各种命名和目录服务。这些服务的具体实现由不同的 SPI（Service Provider In">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Jndi反序列化漏洞分析">
 <meta property="og:url" content="https://hai0unu11.github.io/2026/08/10/Jndi%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/index.html">
 <meta property="og:site_name" content="Hai0uBlog">
-<meta property="og:description" content="JNDI 全称为 Java Naming and Directory Interface，即java名称与目录接口，也就是一个名字对应一个Java对象。 JNDI是一个 API 抽象层，它不负责具体实现，而是提供统一的接口来访问各种命名和目录服务。这些服务的具体实现由不同的 SPI（Service Provider Interface）完成，例如：  RMI（Remote Method Invoc">
+<meta property="og:description" content="JNDI 全称为 Java Naming and Directory Interface，即 Java 命名与目录接口。它允许应用通过名称查找对象、对象引用、目录条目或其他资源，并不等同于“一个名字只能对应一个 Java 对象”。 JNDI是一个 API 抽象层，它不负责具体实现，而是提供统一的接口来访问各种命名和目录服务。这些服务的具体实现由不同的 SPI（Service Provider In">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://hai0unu11.github.io/images/image-20260107224802612.png">
 <meta property="og:image" content="https://hai0unu11.github.io/images/image-20260107224843609.png">
@@ -56,10 +56,9 @@
 <meta property="og:image" content="https://hai0unu11.github.io/images/image-20260112212848478.png">
 <meta property="og:image" content="https://hai0unu11.github.io/images/image-20260112212733319.png">
 <meta property="article:published_time" content="2026-08-10T09:47:10.000Z">
-<meta property="article:modified_time" content="2026-08-11T03:00:01.896Z">
+<meta property="article:modified_time" content="2026-08-17T02:50:06.987Z">
 <meta property="article:author" content="Hai0u">
-<meta property="article:tag" content="Java">
-<meta property="article:tag" content="反序列化">
+<meta property="article:tag" content="JNDI">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://hai0unu11.github.io/images/image-20260107224802612.png">
 
@@ -177,7 +176,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -244,7 +243,16 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-11 11:00:01" itemprop="dateModified" datetime="2026-08-11T11:00:01+08:00">2026-08-11</time>
+      <time title="修改时间：2026-08-17 10:50:06" itemprop="dateModified" datetime="2026-08-17T10:50:06+08:00">2026-08-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/security-research/" itemprop="url" rel="index"><span itemprop="name">安全研究</span></a>
+        </span>
     </span>
 
   
@@ -256,7 +264,7 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>JNDI 全称为 <strong>Java Naming and Directory Interface</strong>，即java名称与目录接口，也就是一个名字对应一个Java对象。</p>
+    <div class="post-body" itemprop="articleBody"><p>JNDI 全称为 <strong>Java Naming and Directory Interface</strong>，即 Java 命名与目录接口。它允许应用通过名称查找对象、对象引用、目录条目或其他资源，并不等同于“一个名字只能对应一个 Java 对象”。</p>
 <p>JNDI是一个 <strong>API 抽象层</strong>，它不负责具体实现，而是提供统一的接口来访问各种命名和目录服务。这些服务的具体实现由不同的 SPI（Service Provider Interface）完成，例如：</p>
 <ul>
 <li><strong>RMI</strong>（Remote Method Invocation）：通过 <code>java.naming</code> 访问远程对象注册表。</li>
@@ -448,8 +456,7 @@
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Java/" rel="tag"># Java</a>
-              <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" rel="tag"># 反序列化</a>
+              <a href="/tags/JNDI/" rel="tag"># JNDI</a>
           </div>
 
         

